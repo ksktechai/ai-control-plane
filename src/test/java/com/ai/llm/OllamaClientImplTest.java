@@ -1,10 +1,9 @@
 package com.ai.llm;
 
-import com.ai.common.model.LlmModel;
+import com.ai.model.LlmModel;
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
 import mockwebserver3.junit5.internal.MockWebServerExtension;
-import okhttp3.Headers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

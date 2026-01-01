@@ -1,6 +1,6 @@
 package com.ai.rag;
 
-import com.ai.common.domain.Chunk;
+import com.ai.domain.Chunk;
 
 import java.util.List;
 

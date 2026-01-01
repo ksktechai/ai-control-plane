@@ -296,7 +296,7 @@ ai-control-plane/
 - Shared DTOs
 - Domain models
 - Utilities
-- Package: com.ai.common
+- Package: com.ai
 
 ---
 

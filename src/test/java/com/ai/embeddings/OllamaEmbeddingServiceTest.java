@@ -1,6 +1,6 @@
 package com.ai.embeddings;
 
-import com.ai.common.domain.Embedding;
+import com.ai.domain.Embedding;
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
 import org.junit.jupiter.api.AfterEach;

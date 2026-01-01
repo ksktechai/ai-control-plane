@@ -1,10 +1,10 @@
 package com.ai.api;
 
-import com.ai.common.domain.AnswerResult;
-import com.ai.common.domain.Question;
-import com.ai.common.dto.ChatRequest;
-import com.ai.common.dto.ChatResponse;
-import com.ai.common.util.CorrelationIdHolder;
+import com.ai.domain.AnswerResult;
+import com.ai.domain.Question;
+import com.ai.dto.ChatRequest;
+import com.ai.dto.ChatResponse;
+import com.ai.util.CorrelationIdHolder;
 import com.ai.control.ControlPlane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,9 +1,9 @@
 package com.ai.control;
 
-import com.ai.common.domain.*;
-import com.ai.common.model.LlmModel;
-import com.ai.common.model.RetrievalStrategy;
-import com.ai.common.util.CorrelationIdHolder;
+import com.ai.domain.*;
+import com.ai.model.LlmModel;
+import com.ai.model.RetrievalStrategy;
+import com.ai.util.CorrelationIdHolder;
 import com.ai.llm.OllamaClient;
 import com.ai.rag.RetrievalService;
 import com.ai.verifier.AnswerVerifier;

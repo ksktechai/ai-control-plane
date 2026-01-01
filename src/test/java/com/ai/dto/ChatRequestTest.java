@@ -1,4 +1,4 @@
-package com.ai.common.dto;
+package com.ai.dto;
 
 import org.junit.jupiter.api.Test;
 

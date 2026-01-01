@@ -1,6 +1,6 @@
 package com.ai.llm;
 
-import com.ai.common.model.LlmModel;
+import com.ai.model.LlmModel;
 
 /**
  * Client for interacting with Ollama LLM runtime.

@@ -1,4 +1,4 @@
-package com.ai.common.domain;
+package com.ai.domain;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package com.ai.rag;
 
-import com.ai.common.domain.RetrievalResult;
-import com.ai.common.model.RetrievalStrategy;
+import com.ai.domain.RetrievalResult;
+import com.ai.model.RetrievalStrategy;
 
 /**
  * Service for retrieving relevant context for questions.

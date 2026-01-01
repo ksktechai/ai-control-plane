@@ -1,4 +1,4 @@
-package com.ai.common.model;
+package com.ai.model;
 
 /**
  * Available open-source LLM models.

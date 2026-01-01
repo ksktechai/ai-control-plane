@@ -1,6 +1,6 @@
 package com.ai.util;
 
-import com.ai.common.util.CorrelationIdHolder;
+import com.ai.util.CorrelationIdHolder;
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;

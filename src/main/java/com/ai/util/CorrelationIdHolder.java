@@ -1,4 +1,4 @@
-package com.ai.common.util;
+package com.ai.util;
 
 import org.apache.logging.log4j.ThreadContext;
 import java.util.UUID;

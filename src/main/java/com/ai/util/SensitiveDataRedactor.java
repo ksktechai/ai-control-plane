@@ -1,4 +1,4 @@
-package com.ai.common.util;
+package com.ai.util;
 
 import java.util.Set;
 import java.util.regex.Pattern;

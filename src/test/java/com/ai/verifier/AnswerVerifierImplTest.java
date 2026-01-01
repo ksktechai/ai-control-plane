@@ -1,7 +1,7 @@
 package com.ai.verifier;
 
-import com.ai.common.domain.*;
-import com.ai.common.model.LlmModel;
+import com.ai.domain.*;
+import com.ai.model.LlmModel;
 import com.ai.llm.OllamaClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

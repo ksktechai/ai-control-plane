@@ -1,4 +1,4 @@
-package com.ai.common.domain;
+package com.ai.domain;
 
 /**
  * Status of answer verification.

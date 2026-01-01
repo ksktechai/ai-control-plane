@@ -1,6 +1,6 @@
 package com.ai.rag;
 
-import com.ai.common.domain.Document;
+import com.ai.domain.Document;
 
 import java.util.Optional;
 

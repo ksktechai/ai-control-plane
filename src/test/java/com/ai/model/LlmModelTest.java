@@ -1,6 +1,6 @@
 package com.ai.model;
 
-import com.ai.common.model.LlmModel;
+import com.ai.model.LlmModel;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

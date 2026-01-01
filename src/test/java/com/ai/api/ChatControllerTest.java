@@ -1,14 +1,12 @@
 package com.ai.api;
 
-import com.ai.common.domain.*;
-import com.ai.common.dto.ChatRequest;
-import com.ai.common.model.LlmModel;
 import com.ai.control.ControlPlane;
+import com.ai.domain.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -17,7 +15,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ChatController.class)
 class ChatControllerTest {
@@ -38,8 +37,8 @@ class ChatControllerTest {
         when(controlPlane.answer(any(Question.class))).thenReturn(result);
 
         mockMvc.perform(post("/api/chat")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"question\":\"What is AI?\"}"))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"question\":\"What is AI?\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.answer").value("AI is artificial intelligence"))
                 .andExpect(jsonPath("$.confidence").value(0.9));

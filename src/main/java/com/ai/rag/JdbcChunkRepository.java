@@ -1,7 +1,7 @@
 package com.ai.rag;
 
-import com.ai.common.domain.Chunk;
-import com.ai.common.domain.Embedding;
+import com.ai.domain.Chunk;
+import com.ai.domain.Embedding;
 import com.pgvector.PGvector;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

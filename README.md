@@ -41,7 +41,7 @@ The architecture maintains clean separation through packages rather than physica
 | **LLM Router** | Abstraction over Ollama-based OSS models | `com.ai.llm` |
 | **Embeddings** | Vector generation using nomic-embed-text | `com.ai.embeddings` |
 | **Verifier** | Claim extraction and grounding verification | `com.ai.verifier` |
-| **Common** | Shared domain models, DTOs, and utilities | `com.ai.common` |
+| **Common** | Shared domain models, DTOs, and utilities | `com.ai` |
 
 ## Features
 

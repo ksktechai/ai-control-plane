@@ -1,8 +1,8 @@
 package com.ai.verifier;
 
-import com.ai.common.domain.Answer;
-import com.ai.common.domain.RetrievalResult;
-import com.ai.common.domain.VerificationResult;
+import com.ai.domain.Answer;
+import com.ai.domain.RetrievalResult;
+import com.ai.domain.VerificationResult;
 
 /**
  * Service for verifying answer grounding against retrieved context.

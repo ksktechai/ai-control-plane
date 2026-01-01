@@ -1,4 +1,4 @@
-package com.ai.common.model;
+package com.ai.model;
 
 /**
  * Strategies for retrieving context from the knowledge base.

@@ -1,4 +1,4 @@
-package com.ai.common.dto;
+package com.ai.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;

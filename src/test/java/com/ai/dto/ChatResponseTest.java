@@ -1,6 +1,6 @@
-package com.ai.common.dto;
+package com.ai.dto;
 
-import com.ai.common.domain.Citation;
+import com.ai.domain.Citation;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

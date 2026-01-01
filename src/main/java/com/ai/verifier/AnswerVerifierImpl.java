@@ -1,12 +1,12 @@
 package com.ai.verifier;
 
-import com.ai.common.domain.Answer;
-import com.ai.common.domain.Chunk;
-import com.ai.common.domain.Claim;
-import com.ai.common.domain.RetrievalResult;
-import com.ai.common.domain.VerificationResult;
-import com.ai.common.domain.VerificationStatus;
-import com.ai.common.model.LlmModel;
+import com.ai.domain.Answer;
+import com.ai.domain.Chunk;
+import com.ai.domain.Claim;
+import com.ai.domain.RetrievalResult;
+import com.ai.domain.VerificationResult;
+import com.ai.domain.VerificationStatus;
+import com.ai.model.LlmModel;
 import com.ai.llm.OllamaClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

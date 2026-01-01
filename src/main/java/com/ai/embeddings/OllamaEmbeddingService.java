@@ -1,6 +1,6 @@
 package com.ai.embeddings;
 
-import com.ai.common.domain.Embedding;
+import com.ai.domain.Embedding;
 import com.ai.embeddings.dto.OllamaEmbeddingRequest;
 import com.ai.embeddings.dto.OllamaEmbeddingResponse;
 import org.apache.logging.log4j.LogManager;

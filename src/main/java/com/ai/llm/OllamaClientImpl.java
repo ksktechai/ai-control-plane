@@ -1,6 +1,6 @@
 package com.ai.llm;
 
-import com.ai.common.model.LlmModel;
+import com.ai.model.LlmModel;
 import com.ai.llm.dto.OllamaGenerateRequest;
 import com.ai.llm.dto.OllamaGenerateResponse;
 import com.ai.llm.dto.OllamaModelListResponse;

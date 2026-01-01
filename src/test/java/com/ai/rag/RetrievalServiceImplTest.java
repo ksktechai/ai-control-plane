@@ -1,9 +1,9 @@
 package com.ai.rag;
 
-import com.ai.common.domain.Chunk;
-import com.ai.common.domain.Embedding;
-import com.ai.common.domain.RetrievalResult;
-import com.ai.common.model.RetrievalStrategy;
+import com.ai.domain.Chunk;
+import com.ai.domain.Embedding;
+import com.ai.domain.RetrievalResult;
+import com.ai.model.RetrievalStrategy;
 import com.ai.embeddings.EmbeddingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

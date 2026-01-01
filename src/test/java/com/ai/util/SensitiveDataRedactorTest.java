@@ -1,6 +1,6 @@
 package com.ai.util;
 
-import com.ai.common.util.SensitiveDataRedactor;
+import com.ai.util.SensitiveDataRedactor;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

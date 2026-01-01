@@ -1,6 +1,6 @@
 package com.ai.model;
 
-import com.ai.common.model.RetrievalStrategy;
+import com.ai.model.RetrievalStrategy;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;

@@ -1,7 +1,7 @@
 package com.ai.control;
 
-import com.ai.common.domain.AnswerResult;
-import com.ai.common.domain.Question;
+import com.ai.domain.AnswerResult;
+import com.ai.domain.Question;
 
 /**
  * Main control plane interface - the "brain" of the system.
