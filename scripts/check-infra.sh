@@ -16,13 +16,16 @@ else
 fi
 
 echo ""
-echo "Ollama status:"
+echo "Ollama status (host installation):"
 if curl -s http://localhost:11434/api/tags > /dev/null 2>&1; then
     echo "  ✓ Ollama is running and ready"
     echo "  Available models:"
     curl -s http://localhost:11434/api/tags | grep -o '"name":"[^"]*"' | cut -d'"' -f4 | sed 's/^/    - /'
 else
     echo "  ✗ Ollama is not ready"
+    echo "  Please start Ollama:"
+    echo "    macOS: Ollama should auto-start"
+    echo "    Linux: systemctl start ollama"
 fi
 
 echo ""

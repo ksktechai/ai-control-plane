@@ -99,7 +99,8 @@ The control plane automatically escalates when confidence is low:
 ### Prerequisites
 
 - **Java 21** (Temurin recommended)
-- **Docker** and **Docker Compose**
+- **Docker** and **Docker Compose** (for PostgreSQL)
+- **Ollama** (install from https://ollama.ai)
 - **8GB+ RAM** (for running LLMs locally)
 
 ### Quick Start
@@ -110,17 +111,19 @@ The control plane automatically escalates when confidence is low:
    cd ai-control-plane
    ```
 
-2. **Start infrastructure** (PostgreSQL + Ollama)
+2. **Start infrastructure**
    ```bash
    ./scripts/start-infra.sh
    ```
 
    This will:
-   - Start PostgreSQL with pgvector extension
-   - Start Ollama runtime
-   - Pull required models (nomic-embed-text, phi3:mini, qwen2.5:7b, llama3.1:8b)
+   - Start PostgreSQL with pgvector extension (Docker container)
+   - Check that Ollama is installed and running on your host
+   - Pull required models if missing (nomic-embed-text, phi3:mini, qwen2.5:7b)
    - Initialize database schema
    - Create sample documents
+
+   **Note:** Ollama runs as a **host installation**, not in a container. Make sure Ollama is installed and running before starting the infrastructure.
 
 3. **Build the application**
    ```bash
