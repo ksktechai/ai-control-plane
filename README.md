@@ -3,8 +3,8 @@
 **Enterprise-grade, agentic RAG control plane using only open-source AI models**
 
 [![CI](https://github.com/ksktechai/ai-control-plane/workflows/CI/badge.svg)](https://github.com/ksktechai/ai-control-plane/actions)
-[![Java 21](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
-[![Spring Boot 3.4](https://img.shields.io/badge/Spring%20Boot-3.4-green.svg)](https://spring.io/projects/spring-boot)
+[![Java 25](https://img.shields.io/badge/Java-25-blue.svg)](https://openjdk.org/projects/jdk/25/)
+[![Spring Boot 4.0.1](https://img.shields.io/badge/Spring%20Boot-4.0.1-green.svg)](https://spring.io/projects/spring-boot)
 
 ## Overview
 
@@ -85,8 +85,8 @@ The control plane automatically escalates when confidence is low:
 
 ## Tech Stack
 
-- **Java 21** (latest LTS)
-- **Spring Boot 3.4.1**
+- **Java 25** (latest LTS)
+- **Spring Boot 4.0.1**
 - **Gradle** (single-module build with package-based organization)
 - **PostgreSQL 16** + **pgvector**
 - **Ollama** (local LLM runtime)
@@ -98,7 +98,7 @@ The control plane automatically escalates when confidence is low:
 
 ### Prerequisites
 
-- **Java 21** (Temurin recommended)
+- **Java 25** (Temurin recommended)
 - **Docker** and **Docker Compose** (for PostgreSQL)
 - **Ollama** (install from https://ollama.ai)
 - **8GB+ RAM** (for running LLMs locally)
