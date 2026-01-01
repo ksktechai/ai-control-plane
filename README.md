@@ -2,7 +2,7 @@
 
 **Enterprise-grade, agentic RAG control plane using only open-source AI models**
 
-[![CI](https://github.com/your-org/ai-control-plane/workflows/CI/badge.svg)](https://github.com/your-org/ai-control-plane/actions)
+[![CI](https://github.com/ksktechai/ai-control-plane/workflows/CI/badge.svg)](https://github.com/ksktechai/ai-control-plane/actions)
 [![Java 21](https://img.shields.io/badge/Java-21-blue.svg)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot 3.4](https://img.shields.io/badge/Spring%20Boot-3.4-green.svg)](https://spring.io/projects/spring-boot)
 
@@ -107,7 +107,7 @@ The control plane automatically escalates when confidence is low:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-org/ai-control-plane.git
+   git clone https://github.com/ksktechai/ai-control-plane.git
    cd ai-control-plane
    ```
 
