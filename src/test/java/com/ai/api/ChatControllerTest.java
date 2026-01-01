@@ -6,8 +6,8 @@ import com.ai.common.model.LlmModel;
 import com.ai.control.ControlPlane;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,15 +25,14 @@ class ChatControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockBean
+    @MockitoBean
     private ControlPlane controlPlane;
 
     @Test
     void shouldHandleChatRequest() throws Exception {
         Answer answer = new Answer("AI is artificial intelligence", List.of(), "llama3.1:8b");
         VerificationResult verification = new VerificationResult(
-            VerificationStatus.GROUNDED, List.of(), 0.95, "Grounded"
-        );
+                VerificationStatus.GROUNDED, List.of(), 0.95, "Grounded");
         AnswerResult result = new AnswerResult(answer, verification, 0.9, "SIMPLE");
 
         when(controlPlane.answer(any(Question.class))).thenReturn(result);
@@ -41,15 +40,15 @@ class ChatControllerTest {
         mockMvc.perform(post("/api/chat")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"question\":\"What is AI?\"}"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.answer").value("AI is artificial intelligence"))
-            .andExpect(jsonPath("$.confidence").value(0.9));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.answer").value("AI is artificial intelligence"))
+                .andExpect(jsonPath("$.confidence").value(0.9));
     }
 
     @Test
     void shouldReturnHealthStatus() throws Exception {
         mockMvc.perform(get("/api/health"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status").value("UP"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("UP"));
     }
 }

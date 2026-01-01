@@ -41,25 +41,24 @@ class ControlPlaneImplTest {
     void shouldAnswerQuestionSuccessfully() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[]{0.1f}, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("AI is artificial intelligence", List.of(), "phi3:mini");
 
         VerificationResult verification = new VerificationResult(
-            VerificationStatus.GROUNDED,
-            List.of(),
-            0.95,
-            "Fully grounded"
-        );
+                VerificationStatus.GROUNDED,
+                List.of(),
+                0.95,
+                "Fully grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
-            .thenReturn(retrievalResult);
+                .thenReturn(retrievalResult);
         when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
-            .thenReturn("AI is artificial intelligence");
+                .thenReturn("AI is artificial intelligence");
         when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
-            .thenReturn(verification);
+                .thenReturn(verification);
 
         AnswerResult result = controlPlane.answer(question);
 
@@ -72,15 +71,15 @@ class ControlPlaneImplTest {
     @Test
     void shouldThrowExceptionForNullQuestion() {
         assertThatThrownBy(() -> controlPlane.answer(null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Question cannot be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Question cannot be null");
     }
 
     @Test
     void shouldRetryWithEscalatedModelWhenConfidenceLow() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[]{0.1f}, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
@@ -89,28 +88,26 @@ class ControlPlaneImplTest {
 
         // First attempt returns low confidence
         VerificationResult lowConfidenceVerification = new VerificationResult(
-            VerificationStatus.PARTIALLY_GROUNDED,
-            List.of(),
-            0.5,
-            "Partially grounded"
-        );
+                VerificationStatus.PARTIALLY_GROUNDED,
+                List.of(),
+                0.5,
+                "Partially grounded");
 
         // Second attempt returns high confidence
         VerificationResult highConfidenceVerification = new VerificationResult(
-            VerificationStatus.GROUNDED,
-            List.of(),
-            0.95,
-            "Fully grounded"
-        );
+                VerificationStatus.GROUNDED,
+                List.of(),
+                0.95,
+                "Fully grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
-            .thenReturn(retrievalResult);
+                .thenReturn(retrievalResult);
         when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
-            .thenReturn("Vague answer")
-            .thenReturn("Better answer");
+                .thenReturn("Vague answer")
+                .thenReturn("Better answer");
         when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
-            .thenReturn(lowConfidenceVerification)
-            .thenReturn(highConfidenceVerification);
+                .thenReturn(lowConfidenceVerification)
+                .thenReturn(highConfidenceVerification);
 
         AnswerResult result = controlPlane.answer(question);
 
@@ -122,7 +119,7 @@ class ControlPlaneImplTest {
     void shouldReturnLowConfidenceAnswerAfterMaxRetries() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[]{0.1f}, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
@@ -130,18 +127,17 @@ class ControlPlaneImplTest {
 
         // Always return low confidence
         VerificationResult lowConfidenceVerification = new VerificationResult(
-            VerificationStatus.UNGROUNDED,
-            List.of(),
-            0.2,
-            "Ungrounded"
-        );
+                VerificationStatus.UNGROUNDED,
+                List.of(),
+                0.2,
+                "Ungrounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
-            .thenReturn(retrievalResult);
+                .thenReturn(retrievalResult);
         when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
-            .thenReturn("Vague answer");
+                .thenReturn("Vague answer");
         when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
-            .thenReturn(lowConfidenceVerification);
+                .thenReturn(lowConfidenceVerification);
 
         AnswerResult result = controlPlane.answer(question);
 
@@ -154,36 +150,35 @@ class ControlPlaneImplTest {
         Question question = new Question("What is AI?", "corr-123");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
-            .thenThrow(new RuntimeException("Retrieval failed"));
+                .thenThrow(new RuntimeException("Retrieval failed"));
 
         assertThatThrownBy(() -> controlPlane.answer(question))
-            .isInstanceOf(ControlPlaneException.class)
-            .hasMessageContaining("Failed to generate answer after 2 attempts");
+                .isInstanceOf(ControlPlaneException.class)
+                .hasMessageContaining("Failed to generate answer after 2 attempts");
     }
 
     @Test
     void shouldCalculateConfidenceForPartiallyGrounded() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[]{0.1f}, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("Partially correct answer", List.of(), "phi3:mini");
 
         VerificationResult partialVerification = new VerificationResult(
-            VerificationStatus.PARTIALLY_GROUNDED,
-            List.of(),
-            0.9,  // groundingScore
-            "Partially grounded"
-        );
+                VerificationStatus.PARTIALLY_GROUNDED,
+                List.of(),
+                0.9, // groundingScore
+                "Partially grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
-            .thenReturn(retrievalResult);
+                .thenReturn(retrievalResult);
         when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
-            .thenReturn("Partially correct answer");
+                .thenReturn("Partially correct answer");
         when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
-            .thenReturn(partialVerification);
+                .thenReturn(partialVerification);
 
         AnswerResult result = controlPlane.answer(question);
 
@@ -195,29 +190,115 @@ class ControlPlaneImplTest {
     void shouldCalculateConfidenceForFailed() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[]{0.1f}, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("Failed answer", List.of(), "phi3:mini");
 
         VerificationResult failedVerification = new VerificationResult(
-            VerificationStatus.FAILED,
-            List.of(),
-            0.0,
-            "Verification failed"
-        );
+                VerificationStatus.FAILED,
+                List.of(),
+                0.0,
+                "Verification failed");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
-            .thenReturn(retrievalResult);
+                .thenReturn(retrievalResult);
         when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
-            .thenReturn("Failed answer");
+                .thenReturn("Failed answer");
         when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
-            .thenReturn(failedVerification);
+                .thenReturn(failedVerification);
 
         AnswerResult result = controlPlane.answer(question);
 
         assertThat(result).isNotNull();
         assertThat(result.confidence()).isEqualTo(0.1);
+    }
+
+    @Test
+    void shouldHandleEmptyChunks() {
+        Question question = new Question("What is AI?", "corr-123");
+
+        RetrievalResult retrievalResult = new RetrievalResult(List.of(), "SIMPLE", 100L);
+
+        VerificationResult verification = new VerificationResult(
+                VerificationStatus.GROUNDED,
+                List.of(),
+                0.95,
+                "Grounded");
+
+        when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
+                .thenReturn(retrievalResult);
+        when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
+                .thenReturn("Answer without context");
+        when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
+                .thenReturn(verification);
+
+        AnswerResult result = controlPlane.answer(question);
+
+        assertThat(result).isNotNull();
+        assertThat(result.answer().citations()).isEmpty();
+    }
+
+    @Test
+    void shouldHandleMultipleChunksForCitations() {
+        Question question = new Question("What is AI?", "corr-123");
+
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Chunk chunk1 = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
+        Chunk chunk2 = new Chunk("chunk-2", "doc-1", "Machine learning is a subset of AI", 1, embedding);
+        Chunk chunk3 = new Chunk("chunk-3", "doc-2", "Deep learning uses neural networks", 0, embedding);
+        Chunk chunk4 = new Chunk("chunk-4", "doc-2", "NLP is natural language processing", 1, embedding);
+
+        RetrievalResult retrievalResult = new RetrievalResult(
+                List.of(chunk1, chunk2, chunk3, chunk4), "DEEP", 100L);
+
+        VerificationResult verification = new VerificationResult(
+                VerificationStatus.GROUNDED,
+                List.of(),
+                0.95,
+                "Grounded");
+
+        when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
+                .thenReturn(retrievalResult);
+        when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
+                .thenReturn("AI with deep learning");
+        when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
+                .thenReturn(verification);
+
+        AnswerResult result = controlPlane.answer(question);
+
+        assertThat(result).isNotNull();
+        // Should limit to 3 citations
+        assertThat(result.answer().citations()).hasSize(3);
+    }
+
+    @Test
+    void shouldRecoverFromFirstAttemptError() {
+        Question question = new Question("What is AI?", "corr-123");
+
+        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
+        RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
+
+        VerificationResult verification = new VerificationResult(
+                VerificationStatus.GROUNDED,
+                List.of(),
+                0.95,
+                "Grounded");
+
+        // First call fails, second succeeds
+        when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
+                .thenThrow(new RuntimeException("First attempt failed"))
+                .thenReturn(retrievalResult);
+        when(ollamaClient.generate(any(LlmModel.class), anyString(), anyInt()))
+                .thenReturn("AI is artificial intelligence");
+        when(answerVerifier.verify(any(Answer.class), any(RetrievalResult.class)))
+                .thenReturn(verification);
+
+        AnswerResult result = controlPlane.answer(question);
+
+        assertThat(result).isNotNull();
+        assertThat(result.confidence()).isGreaterThanOrEqualTo(0.7);
     }
 }

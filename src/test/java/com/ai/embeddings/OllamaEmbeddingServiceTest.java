@@ -1,8 +1,8 @@
 package com.ai.embeddings;
 
 import com.ai.common.domain.Embedding;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
+import mockwebserver3.MockResponse;
+import mockwebserver3.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,9 +33,10 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldGenerateEmbedding() {
-        mockServer.enqueue(new MockResponse()
-            .setBody("{\"embedding\":[0.1,0.2,0.3]}")
-            .addHeader("Content-Type", "application/json"));
+        mockServer.enqueue(new MockResponse.Builder()
+                .body("{\"embedding\":[0.1,0.2,0.3]}")
+                .addHeader("Content-Type", "application/json")
+                .build());
 
         Embedding embedding = service.generateEmbedding("sample text");
 
@@ -47,15 +48,15 @@ class OllamaEmbeddingServiceTest {
     @Test
     void shouldThrowExceptionForNullText() {
         assertThatThrownBy(() -> service.generateEmbedding(null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Text cannot be null or blank");
     }
 
     @Test
     void shouldThrowExceptionForBlankText() {
         assertThatThrownBy(() -> service.generateEmbedding("  "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Text cannot be null or blank");
     }
 
     @Test
@@ -65,39 +66,44 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldThrowExceptionOnNullEmbeddingInResponse() {
-        mockServer.enqueue(new MockResponse()
-            .setBody("{}")
-            .addHeader("Content-Type", "application/json"));
+        mockServer.enqueue(new MockResponse.Builder()
+                .body("{}")
+                .addHeader("Content-Type", "application/json")
+                .build());
 
         assertThatThrownBy(() -> service.generateEmbedding("sample text"))
-            .isInstanceOf(EmbeddingException.class)
-            .hasMessageContaining("Received null embedding from Ollama");
+                .isInstanceOf(EmbeddingException.class)
+                .hasMessageContaining("Received null embedding from Ollama");
     }
 
     @Test
     void shouldThrowExceptionOnCompletelyNullResponse() {
-        mockServer.enqueue(new MockResponse()
-            .setResponseCode(204)  // No content
-            .addHeader("Content-Type", "application/json"));
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(204) // No content
+                .addHeader("Content-Type", "application/json")
+                .build());
 
         assertThatThrownBy(() -> service.generateEmbedding("sample text"))
-            .isInstanceOf(EmbeddingException.class);
+                .isInstanceOf(EmbeddingException.class);
     }
 
     @Test
     void shouldThrowExceptionOnRestClientError() {
-        mockServer.enqueue(new MockResponse().setResponseCode(500));
+        mockServer.enqueue(new MockResponse.Builder()
+                .code(500)
+                .build());
 
         assertThatThrownBy(() -> service.generateEmbedding("sample text"))
-            .isInstanceOf(EmbeddingException.class)
-            .hasMessageContaining("Failed to generate embedding");
+                .isInstanceOf(EmbeddingException.class)
+                .hasMessageContaining("Failed to generate embedding");
     }
 
     @Test
     void shouldHandleMultipleDimensionEmbedding() {
-        mockServer.enqueue(new MockResponse()
-            .setBody("{\"embedding\":[0.1,0.2,0.3,0.4,0.5]}")
-            .addHeader("Content-Type", "application/json"));
+        mockServer.enqueue(new MockResponse.Builder()
+                .body("{\"embedding\":[0.1,0.2,0.3,0.4,0.5]}")
+                .addHeader("Content-Type", "application/json")
+                .build());
 
         Embedding embedding = service.generateEmbedding("sample text");
 
