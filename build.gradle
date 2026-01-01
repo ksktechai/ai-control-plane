@@ -1,0 +1,307 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'jacoco'
+}
+
+group = 'com.ai'
+version = '1.0.0-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
+dependencies {
+    // Spring Boot Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-autoconfigure'
+
+    // Spring Framework
+    implementation 'org.springframework:spring-context:6.2.1'
+
+    // Log4j2 (exclude default Logback)
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    implementation 'org.apache.logging.log4j:log4j-api:2.24.3'
+    implementation 'org.apache.logging.log4j:log4j-core:2.24.3'
+    implementation 'org.apache.logging.log4j:log4j-layout-template-json:2.24.3'
+
+    // Jackson for JSON
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.2'
+
+    // Jakarta annotations
+    implementation 'jakarta.annotation:jakarta.annotation-api:3.0.0'
+    implementation 'jakarta.validation:jakarta.validation-api:3.1.0'
+
+    // PostgreSQL driver
+    implementation 'org.postgresql:postgresql:42.7.4'
+
+    // pgvector support
+    implementation 'com.pgvector:pgvector:0.1.4'
+
+    // SQL logging with datasource-proxy
+    implementation 'net.ttddyy:datasource-proxy:1.10'
+
+    // Testing - JUnit 5 (Jupiter)
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Testing - AssertJ
+    testImplementation 'org.assertj:assertj-core:3.27.3'
+
+    // Testing - Mockito
+    testImplementation 'org.mockito:mockito-core:5.14.2'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.14.2'
+
+    // Testing - Spring Boot
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+
+    // Testing - MockWebServer
+    testImplementation 'com.squareup.okhttp3:mockwebserver:4.12.0'
+
+    // Testing - H2 for in-memory tests
+    testImplementation 'com.h2database:h2:2.2.224'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+        }
+        rule {
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+        }
+    }
+}
+
+tasks.named('check') {
+    dependsOn jacocoTestCoverageVerification
+}
+
+// Enhanced diagram generation task using Docker
+tasks.register('docs') {
+    group = 'documentation'
+    description = 'Generates PNG diagrams from Mermaid and PlantUML sources using Docker'
+
+    doFirst {
+        // Check if Docker is available
+        try {
+            def dockerCheck = new ByteArrayOutputStream()
+            exec {
+                commandLine 'docker', '--version'
+                standardOutput = dockerCheck
+                errorOutput = new ByteArrayOutputStream()
+            }
+            println "Docker detected: ${dockerCheck.toString().trim()}"
+        } catch (Exception e) {
+            throw new GradleException("""
+                Docker is not available. Please install Docker to generate diagrams.
+
+                Install Docker from: https://docs.docker.com/get-docker/
+
+                Alternatively, you can render diagrams manually:
+                - Mermaid: https://mermaid.live/
+                - PlantUML: http://www.plantuml.com/plantuml/
+            """.stripIndent())
+        }
+    }
+
+    doLast {
+        def diagramsDir = file('docs/diagrams')
+        def imagesDir = file('docs/images')
+
+        if (!diagramsDir.exists()) {
+            throw new GradleException("docs/diagrams directory does not exist. Please create diagram source files first.")
+        }
+
+        // Create images directory if it doesn't exist
+        imagesDir.mkdirs()
+
+        println "\n=== Generating Diagrams ==="
+        println "Source: ${diagramsDir.absolutePath}"
+        println "Output: ${imagesDir.absolutePath}\n"
+
+        // Process Mermaid files
+        def mermaidFiles = fileTree(diagramsDir) {
+            include '**/*.mmd'
+        }
+
+        if (mermaidFiles.isEmpty()) {
+            println "No Mermaid (.mmd) files found"
+        } else {
+            println "Processing Mermaid files..."
+            mermaidFiles.each { mmdFile ->
+                def baseName = mmdFile.name.replaceAll(/\.mmd$/, '')
+                def outputFile = new File(imagesDir, "${baseName}.png")
+
+                println "  ${mmdFile.name} -> ${outputFile.name}"
+
+                try {
+                    exec {
+                        commandLine 'docker', 'run', '--rm',
+                            '-v', "${diagramsDir.absolutePath}:/data",
+                            '-v', "${imagesDir.absolutePath}:/output",
+                            'minlag/mermaid-cli',
+                            '-i', "/data/${mmdFile.name}",
+                            '-o', "/output/${baseName}.png",
+                            '-b', 'transparent'
+                        errorOutput = new ByteArrayOutputStream()
+                    }
+                    println "    ✓ Generated successfully"
+                } catch (Exception e) {
+                    println "    ✗ Failed: ${e.message}"
+                    throw new GradleException("Failed to generate ${mmdFile.name}", e)
+                }
+            }
+        }
+
+        // Process PlantUML files
+        def plantumlFiles = fileTree(diagramsDir) {
+            include '**/*.puml'
+        }
+
+        if (plantumlFiles.isEmpty()) {
+            println "\nNo PlantUML (.puml) files found"
+        } else {
+            println "\nProcessing PlantUML files..."
+            plantumlFiles.each { pumlFile ->
+                def baseName = pumlFile.name.replaceAll(/\.puml$/, '')
+                def outputFile = new File(imagesDir, "${baseName}.png")
+
+                println "  ${pumlFile.name} -> ${outputFile.name}"
+
+                try {
+                    exec {
+                        commandLine 'docker', 'run', '--rm',
+                            '-v', "${diagramsDir.absolutePath}:/data",
+                            '-v', "${imagesDir.absolutePath}:/output",
+                            'plantuml/plantuml',
+                            '-tpng',
+                            "/data/${pumlFile.name}",
+                            '-o', '/output'
+                    }
+                    println "    ✓ Generated successfully"
+                } catch (Exception e) {
+                    println "    ✗ Failed: ${e.message}"
+                    throw new GradleException("Failed to generate ${pumlFile.name}", e)
+                }
+            }
+        }
+
+        println "\n=== Diagram Generation Complete ==="
+        println "Generated files:"
+        fileTree(imagesDir) {
+            include '**/*.png'
+        }.each { pngFile ->
+            println "  - ${pngFile.absolutePath}"
+        }
+        println ""
+    }
+}
+
+// Task to verify diagram generation setup
+tasks.register('verifyDocsSetup') {
+    group = 'documentation'
+    description = 'Verifies that diagram generation environment is properly configured'
+
+    doLast {
+        println "\n=== Verifying Documentation Setup ==="
+
+        // Check directories
+        def diagramsDir = file('docs/diagrams')
+        def imagesDir = file('docs/images')
+
+        print "  Checking docs/diagrams directory... "
+        if (diagramsDir.exists()) {
+            println "✓ EXISTS"
+        } else {
+            println "✗ MISSING"
+            throw new GradleException("docs/diagrams directory does not exist")
+        }
+
+        print "  Checking docs/images directory... "
+        if (!imagesDir.exists()) {
+            imagesDir.mkdirs()
+            println "✓ CREATED"
+        } else {
+            println "✓ EXISTS"
+        }
+
+        // Check for diagram source files
+        def mermaidCount = fileTree(diagramsDir) { include '**/*.mmd' }.size()
+        def plantumlCount = fileTree(diagramsDir) { include '**/*.puml' }.size()
+
+        println "\n  Diagram source files:"
+        println "    Mermaid (.mmd):  ${mermaidCount} file(s)"
+        println "    PlantUML (.puml): ${plantumlCount} file(s)"
+
+        if (mermaidCount == 0 && plantumlCount == 0) {
+            println "\n  ⚠ WARNING: No diagram source files found in docs/diagrams/"
+        }
+
+        // Check Docker
+        print "\n  Checking Docker availability... "
+        try {
+            def dockerVersion = new ByteArrayOutputStream()
+            exec {
+                commandLine 'docker', '--version'
+                standardOutput = dockerVersion
+                errorOutput = new ByteArrayOutputStream()
+            }
+            println "✓ AVAILABLE"
+            println "    ${dockerVersion.toString().trim()}"
+        } catch (Exception e) {
+            println "✗ NOT AVAILABLE"
+            println "\n  Please install Docker from: https://docs.docker.com/get-docker/"
+        }
+
+        // Check for generated images
+        def generatedCount = fileTree(imagesDir) { include '**/*.png' }.size()
+        println "\n  Generated diagram images: ${generatedCount} file(s)"
+
+        println "\n=== Verification Complete ==="
+        println "\nTo generate diagrams, run: ./gradlew docs"
+        println ""
+    }
+}

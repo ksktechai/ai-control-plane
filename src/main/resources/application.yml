@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ai-control-plane
+  datasource:
+    url: jdbc:postgresql://localhost:5433/aidb
+    username: aiuser
+    password: aipass
+    driver-class-name: org.postgresql.Driver
+
+ollama:
+  base-url: http://localhost:11434
+
+embedding:
+  ollama-base-url: http://localhost:11434
+  model: nomic-embed-text
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%-5p} %style{%pid}{magenta} --- [%15.15t] %style{[%X{correlationId}]}{yellow} %style{%-40.40logger{39}}{cyan} : %m%n"
+

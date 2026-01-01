@@ -1,0 +1,105 @@
+@startuml architecture_sequence
+!theme plain
+
+' White background setting
+skinparam backgroundColor #FFFFFF
+
+' Global styling
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam shadowing false
+skinparam roundcorner 10
+
+' Sequence diagram specific
+skinparam sequenceArrowColor #4A5568
+skinparam sequenceArrowThickness 2
+skinparam sequenceLifeLineBorderColor #90A4AE
+skinparam sequenceLifeLineBackgroundColor #ECEFF1
+skinparam sequenceGroupBackgroundColor #FFF3E0
+skinparam sequenceGroupBorderColor #E65100
+skinparam sequenceDividerBackgroundColor #FFE0B2
+skinparam sequenceDividerBorderColor #F57C00
+
+' Note styling
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #FBC02D
+
+' Activation styling
+skinparam sequenceBoxBackgroundColor #FFFFFF
+skinparam activationBackgroundColor #C8E6C9
+skinparam activationBorderColor #388E3C
+
+actor User #E8F5E9
+participant "REST API" as API #E3F2FD
+participant "Control Plane" as CP #B3E5FC
+participant "Retrieval\nService" as RAG #E1BEE7
+participant "PostgreSQL\n+ pgvector" as DB #F8BBD9
+participant "LLM Router" as LLM #B2EBF2
+participant "Ollama" as Ollama #FFE0B2
+participant "Answer\nVerifier" as Verify #FFF59D
+
+User -> API: POST /chat {"question": "What is AI?"}
+activate API
+
+API -> API: Generate Correlation ID
+API -> CP: answer(Question)
+activate CP
+
+== Attempt 1: Small Model + Simple Retrieval ==
+
+CP -> RAG: retrieve(question, SIMPLE)
+activate RAG
+RAG -> DB: Generate embedding
+RAG -> DB: Vector similarity search (top 5)
+DB --> RAG: Relevant chunks
+RAG --> CP: RetrievalResult
+deactivate RAG
+
+CP -> LLM: generate(PHI_3_MINI, prompt, 256)
+activate LLM
+LLM -> Ollama: POST /api/generate
+Ollama --> LLM: Response text
+LLM --> CP: Answer
+deactivate LLM
+
+CP -> Verify: verify(answer, context)
+activate Verify
+Verify -> LLM: Extract claims
+LLM --> Verify: Claims list
+Verify -> LLM: Verify each claim
+LLM --> Verify: Grounding results
+Verify --> CP: VerificationResult\n(confidence: 0.65)
+deactivate Verify
+
+CP -> CP: confidence < 0.7\nEscalate!
+
+== Attempt 2: Medium Model + Deep Retrieval ==
+
+CP -> RAG: retrieve(question, DEEP)
+activate RAG
+RAG -> DB: Vector similarity search (top 10)
+DB --> RAG: More chunks
+RAG --> CP: RetrievalResult
+deactivate RAG
+
+CP -> LLM: generate(QWEN_2_5_7B, prompt, 512)
+activate LLM
+LLM -> Ollama: POST /api/generate
+Ollama --> LLM: Better response
+LLM --> CP: Answer
+deactivate LLM
+
+CP -> Verify: verify(answer, context)
+activate Verify
+Verify -> LLM: Extract & verify claims
+LLM --> Verify: All claims grounded
+Verify --> CP: VerificationResult\n(GROUNDED, confidence: 0.95)
+deactivate Verify
+
+CP --> API: AnswerResult\n(answer, verification, confidence)
+deactivate CP
+
+API --> User: ChatResponse\n{answer, citations, confidence: 0.9}
+deactivate API
+
+@enduml

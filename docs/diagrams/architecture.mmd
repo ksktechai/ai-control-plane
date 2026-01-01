@@ -1,0 +1,94 @@
+%%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'primaryColor': '#4a90d9', 'primaryTextColor': '#000000', 'primaryBorderColor': '#2c5282', 'lineColor': '#4a5568', 'secondaryColor': '#48bb78', 'tertiaryColor': '#64b5f6'}}}%%
+graph TB
+    subgraph Client["🧑 Client"]
+        User[👤 User]
+    end
+
+    subgraph APILayer["🌐 API Layer"]
+        API[REST API<br/>POST /chat]
+        Filter[Logging Filter<br/>Correlation ID]
+    end
+
+    subgraph ControlPlane["🎛️ Control Plane"]
+        CP[Control Plane<br/>Orchestration Engine]
+        Strategy[Model Selection<br/>& Retry Logic]
+    end
+
+    subgraph RAGPipeline["📚 RAG Pipeline"]
+        Retrieval[Retrieval Service]
+        Embed[Embedding Service]
+        VectorDB[(PostgreSQL<br/>+ pgvector)]
+    end
+
+    subgraph LLMLayer["🤖 LLM Layer"]
+        Router[LLM Router]
+        Ollama[Ollama Runtime]
+        Models[OSS Models<br/>Llama, Qwen, Phi]
+    end
+
+    subgraph Verification["✅ Verification"]
+        Verifier[Answer Verifier]
+        Claims[Claim Extraction]
+        Ground[Grounding Check]
+    end
+
+    User -->|Question| API
+    API --> Filter
+    Filter --> CP
+
+    CP -->|1. Retrieve Context| Retrieval
+    Retrieval --> Embed
+    Embed --> VectorDB
+    VectorDB -->|Similar Chunks| Retrieval
+
+    CP -->|2. Generate Answer| Router
+    Router --> Ollama
+    Ollama --> Models
+    Models -->|Response| Router
+    Router -->|Answer| CP
+
+    CP -->|3. Verify Grounding| Verifier
+    Verifier --> Claims
+    Claims --> Ground
+    Ground -->|Verification Result| Verifier
+    Verifier -->|Confidence Score| CP
+
+    CP -->|Low Confidence?| Strategy
+    Strategy -->|Escalate Model<br/>& Strategy| CP
+
+    CP -->|Final Result| API
+    API -->|Response + Citations| User
+
+    %% Client styling
+    style User fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20
+
+    %% API Layer styling
+    style API fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,color:#0d47a1
+    style Filter fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#0d47a1
+
+    %% Control Plane styling - Primary focal point
+    style CP fill:#E3F2FD,stroke:#1565C0,stroke-width:3px,color:#0D47A1
+    style Strategy fill:#BBDEFB,stroke:#1976D2,stroke-width:2px,color:#1565C0
+
+    %% RAG Pipeline styling
+    style Retrieval fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#4a148c
+    style Embed fill:#e1bee7,stroke:#8e24aa,stroke-width:2px,color:#4a148c
+    style VectorDB fill:#ce93d8,stroke:#7b1fa2,stroke-width:3px,color:#4a148c
+
+    %% LLM Layer styling
+    style Router fill:#e0f7fa,stroke:#00838f,stroke-width:2px,color:#006064
+    style Ollama fill:#b2ebf2,stroke:#0097a7,stroke-width:2px,color:#006064
+    style Models fill:#80deea,stroke:#00acc1,stroke-width:2px,color:#006064
+
+    %% Verification styling
+    style Verifier fill:#fff8e1,stroke:#ff8f00,stroke-width:3px,color:#ff6f00
+    style Claims fill:#ffecb3,stroke:#ffa000,stroke-width:2px,color:#ff6f00
+    style Ground fill:#ffe082,stroke:#ffb300,stroke-width:2px,color:#ff6f00
+
+    %% Subgraph (big box) styling - light pastel colors
+    style Client fill:#F1F8E9,stroke:#8BC34A,stroke-width:2px
+    style APILayer fill:#E8F5E9,stroke:#4CAF50,stroke-width:2px
+    style ControlPlane fill:#E3F2FD,stroke:#2196F3,stroke-width:2px
+    style RAGPipeline fill:#F3E5F5,stroke:#9C27B0,stroke-width:2px
+    style LLMLayer fill:#E0F7FA,stroke:#00BCD4,stroke-width:2px
+    style Verification fill:#FFF8E1,stroke:#FFC107,stroke-width:2px
