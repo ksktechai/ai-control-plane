@@ -1,8 +1,8 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class ClaimTest {
 
@@ -27,15 +27,15 @@ class ClaimTest {
     @Test
     void shouldRejectNullText() {
         assertThatThrownBy(() -> new Claim(null, true, "chunk-1"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Claim text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Claim text cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankText() {
         assertThatThrownBy(() -> new Claim("  ", true, "chunk-1"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Claim text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Claim text cannot be null or blank");
     }
 
     @Test
@@ -70,9 +70,9 @@ class ClaimTest {
         Claim claim = new Claim("AI is a technology", true, "chunk-1");
 
         assertThat(claim.toString())
-            .contains("Claim")
-            .contains("AI is a technology")
-            .contains("isGrounded=true")
-            .contains("chunk-1");
+                .contains("Claim")
+                .contains("AI is a technology")
+                .contains("isGrounded=true")
+                .contains("chunk-1");
     }
 }

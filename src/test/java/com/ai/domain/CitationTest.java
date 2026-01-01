@@ -1,8 +1,8 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class CitationTest {
 
@@ -19,57 +19,57 @@ class CitationTest {
     @Test
     void shouldRejectNullChunkId() {
         assertThatThrownBy(() -> new Citation(null, "doc-1", "text", 0.95))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunk ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunk ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankChunkId() {
         assertThatThrownBy(() -> new Citation("  ", "doc-1", "text", 0.95))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunk ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunk ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullDocumentId() {
         assertThatThrownBy(() -> new Citation("chunk-1", null, "text", 0.95))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankDocumentId() {
         assertThatThrownBy(() -> new Citation("chunk-1", "  ", "text", 0.95))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullText() {
         assertThatThrownBy(() -> new Citation("chunk-1", "doc-1", null, 0.95))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Citation text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Citation text cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankText() {
         assertThatThrownBy(() -> new Citation("chunk-1", "doc-1", "  ", 0.95))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Citation text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Citation text cannot be null or blank");
     }
 
     @Test
     void shouldRejectNegativeRelevanceScore() {
         assertThatThrownBy(() -> new Citation("chunk-1", "doc-1", "text", -0.1))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Relevance score must be between 0.0 and 1.0");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Relevance score must be between 0.0 and 1.0");
     }
 
     @Test
     void shouldRejectRelevanceScoreAboveOne() {
         assertThatThrownBy(() -> new Citation("chunk-1", "doc-1", "text", 1.1))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Relevance score must be between 0.0 and 1.0");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Relevance score must be between 0.0 and 1.0");
     }
 
     @Test
@@ -113,9 +113,9 @@ class CitationTest {
         Citation citation = new Citation("chunk-1", "doc-1", "text", 0.95);
 
         assertThat(citation.toString())
-            .contains("Citation")
-            .contains("chunk-1")
-            .contains("doc-1")
-            .contains("0.95");
+                .contains("Citation")
+                .contains("chunk-1")
+                .contains("doc-1")
+                .contains("0.95");
     }
 }

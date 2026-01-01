@@ -1,15 +1,14 @@
 package com.ai.embeddings;
 
+import static org.assertj.core.api.Assertions.*;
+
 import com.ai.domain.Embedding;
+import java.io.IOException;
 import mockwebserver3.MockResponse;
 import mockwebserver3.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
-import static org.assertj.core.api.Assertions.*;
 
 class OllamaEmbeddingServiceTest {
 
@@ -33,10 +32,11 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldGenerateEmbedding() {
-        mockServer.enqueue(new MockResponse.Builder()
-                .body("{\"embedding\":[0.1,0.2,0.3]}")
-                .addHeader("Content-Type", "application/json")
-                .build());
+        mockServer.enqueue(
+                new MockResponse.Builder()
+                        .body("{\"embedding\":[0.1,0.2,0.3]}")
+                        .addHeader("Content-Type", "application/json")
+                        .build());
 
         Embedding embedding = service.generateEmbedding("sample text");
 
@@ -66,10 +66,11 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldThrowExceptionOnNullEmbeddingInResponse() {
-        mockServer.enqueue(new MockResponse.Builder()
-                .body("{}")
-                .addHeader("Content-Type", "application/json")
-                .build());
+        mockServer.enqueue(
+                new MockResponse.Builder()
+                        .body("{}")
+                        .addHeader("Content-Type", "application/json")
+                        .build());
 
         assertThatThrownBy(() -> service.generateEmbedding("sample text"))
                 .isInstanceOf(EmbeddingException.class)
@@ -78,10 +79,11 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldThrowExceptionOnCompletelyNullResponse() {
-        mockServer.enqueue(new MockResponse.Builder()
-                .code(204) // No content
-                .addHeader("Content-Type", "application/json")
-                .build());
+        mockServer.enqueue(
+                new MockResponse.Builder()
+                        .code(204) // No content
+                        .addHeader("Content-Type", "application/json")
+                        .build());
 
         assertThatThrownBy(() -> service.generateEmbedding("sample text"))
                 .isInstanceOf(EmbeddingException.class);
@@ -89,9 +91,7 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldThrowExceptionOnRestClientError() {
-        mockServer.enqueue(new MockResponse.Builder()
-                .code(500)
-                .build());
+        mockServer.enqueue(new MockResponse.Builder().code(500).build());
 
         assertThatThrownBy(() -> service.generateEmbedding("sample text"))
                 .isInstanceOf(EmbeddingException.class)
@@ -100,10 +100,11 @@ class OllamaEmbeddingServiceTest {
 
     @Test
     void shouldHandleMultipleDimensionEmbedding() {
-        mockServer.enqueue(new MockResponse.Builder()
-                .body("{\"embedding\":[0.1,0.2,0.3,0.4,0.5]}")
-                .addHeader("Content-Type", "application/json")
-                .build());
+        mockServer.enqueue(
+                new MockResponse.Builder()
+                        .body("{\"embedding\":[0.1,0.2,0.3,0.4,0.5]}")
+                        .addHeader("Content-Type", "application/json")
+                        .build());
 
         Embedding embedding = service.generateEmbedding("sample text");
 

@@ -3,12 +3,9 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
-/**
- * Represents a citation referencing a source document chunk.
- */
+/** Represents a citation referencing a source document chunk. */
 public final class Citation {
     private final String chunkId;
     private final String documentId;
@@ -63,10 +60,10 @@ public final class Citation {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Citation other)) return false;
-        return Objects.equals(chunkId, other.chunkId) &&
-               Objects.equals(documentId, other.documentId) &&
-               Objects.equals(text, other.text) &&
-               Double.compare(relevanceScore, other.relevanceScore) == 0;
+        return Objects.equals(chunkId, other.chunkId)
+                && Objects.equals(documentId, other.documentId)
+                && Objects.equals(text, other.text)
+                && Double.compare(relevanceScore, other.relevanceScore) == 0;
     }
 
     @Override
@@ -76,8 +73,12 @@ public final class Citation {
 
     @Override
     public String toString() {
-        return "Citation[chunkId=" + chunkId +
-               ", documentId=" + documentId +
-               ", relevanceScore=" + relevanceScore + "]";
+        return "Citation[chunkId="
+                + chunkId
+                + ", documentId="
+                + documentId
+                + ", relevanceScore="
+                + relevanceScore
+                + "]";
     }
 }

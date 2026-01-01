@@ -3,13 +3,10 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Represents the result of a RAG retrieval operation.
- */
+/** Represents the result of a RAG retrieval operation. */
 public final class RetrievalResult {
     private final List<Chunk> chunks;
     private final String strategy;
@@ -53,9 +50,9 @@ public final class RetrievalResult {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof RetrievalResult other)) return false;
-        return Objects.equals(chunks, other.chunks) &&
-               Objects.equals(strategy, other.strategy) &&
-               durationMs == other.durationMs;
+        return Objects.equals(chunks, other.chunks)
+                && Objects.equals(strategy, other.strategy)
+                && durationMs == other.durationMs;
     }
 
     @Override
@@ -65,8 +62,12 @@ public final class RetrievalResult {
 
     @Override
     public String toString() {
-        return "RetrievalResult[chunkCount=" + chunks.size() +
-               ", strategy=" + strategy +
-               ", durationMs=" + durationMs + "]";
+        return "RetrievalResult[chunkCount="
+                + chunks.size()
+                + ", strategy="
+                + strategy
+                + ", durationMs="
+                + durationMs
+                + "]";
     }
 }

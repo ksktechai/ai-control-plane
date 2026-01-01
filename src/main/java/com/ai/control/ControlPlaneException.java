@@ -1,8 +1,6 @@
 package com.ai.control;
 
-/**
- * Exception thrown when control plane operations fail.
- */
+/** Exception thrown when control plane operations fail. */
 public class ControlPlaneException extends RuntimeException {
 
     public ControlPlaneException(String message) {

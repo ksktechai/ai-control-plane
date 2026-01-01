@@ -8,9 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/**
- * Global exception handler for API errors.
- */
+/** Global exception handler for API errors. */
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
@@ -20,9 +18,8 @@ public class GlobalExceptionHandler {
         String correlationId = CorrelationIdHolder.get();
         logger.warn("Bad request - correlationId: {}, error: {}", correlationId, ex.getMessage());
 
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorResponse(ex.getMessage(), correlationId));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(ex.getMessage(), correlationId));
     }
 
     @ExceptionHandler(Exception.class)
@@ -30,11 +27,9 @@ public class GlobalExceptionHandler {
         String correlationId = CorrelationIdHolder.get();
         logger.error("Internal error - correlationId: {}", correlationId, ex);
 
-        return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(new ErrorResponse("Internal server error", correlationId));
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse("Internal server error", correlationId));
     }
 
-    private record ErrorResponse(String error, String correlationId) {
-    }
+    private record ErrorResponse(String error, String correlationId) {}
 }

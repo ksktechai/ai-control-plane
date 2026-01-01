@@ -3,12 +3,9 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
-/**
- * Represents a text chunk from a document with its embedding.
- */
+/** Represents a text chunk from a document with its embedding. */
 public final class Chunk {
     private final String id;
     private final String documentId;
@@ -74,11 +71,11 @@ public final class Chunk {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Chunk other)) return false;
-        return Objects.equals(id, other.id) &&
-               Objects.equals(documentId, other.documentId) &&
-               Objects.equals(text, other.text) &&
-               position == other.position &&
-               Objects.equals(embedding, other.embedding);
+        return Objects.equals(id, other.id)
+                && Objects.equals(documentId, other.documentId)
+                && Objects.equals(text, other.text)
+                && position == other.position
+                && Objects.equals(embedding, other.embedding);
     }
 
     @Override
@@ -88,9 +85,14 @@ public final class Chunk {
 
     @Override
     public String toString() {
-        return "Chunk[id=" + id +
-               ", documentId=" + documentId +
-               ", position=" + position +
-               ", textLength=" + text.length() + "]";
+        return "Chunk[id="
+                + id
+                + ", documentId="
+                + documentId
+                + ", position="
+                + position
+                + ", textLength="
+                + text.length()
+                + "]";
     }
 }

@@ -1,12 +1,9 @@
 package com.ai.rag;
 
 import com.ai.domain.Chunk;
-
 import java.util.List;
 
-/**
- * Repository for chunk storage and retrieval.
- */
+/** Repository for chunk storage and retrieval. */
 public interface ChunkRepository {
 
     /**
@@ -26,8 +23,6 @@ public interface ChunkRepository {
      */
     List<Chunk> findSimilar(float[] queryEmbedding, int topK);
 
-    /**
-     * Deletes all chunks (for testing).
-     */
+    /** Deletes all chunks (for testing). */
     void deleteAll();
 }

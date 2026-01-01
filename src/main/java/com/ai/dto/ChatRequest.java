@@ -3,12 +3,9 @@ package com.ai.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
-/**
- * Request DTO for chat endpoint.
- */
+/** Request DTO for chat endpoint. */
 public final class ChatRequest {
     private final String question;
 

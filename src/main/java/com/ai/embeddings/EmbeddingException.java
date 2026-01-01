@@ -1,8 +1,6 @@
 package com.ai.embeddings;
 
-/**
- * Exception thrown when embedding generation fails.
- */
+/** Exception thrown when embedding generation fails. */
 public class EmbeddingException extends RuntimeException {
 
     public EmbeddingException(String message) {

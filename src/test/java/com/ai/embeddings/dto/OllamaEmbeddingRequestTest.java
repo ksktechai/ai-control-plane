@@ -1,14 +1,15 @@
 package com.ai.embeddings.dto;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class OllamaEmbeddingRequestTest {
 
     @Test
     void shouldCreateRequest() {
-        OllamaEmbeddingRequest request = new OllamaEmbeddingRequest("nomic-embed-text", "sample text");
+        OllamaEmbeddingRequest request =
+                new OllamaEmbeddingRequest("nomic-embed-text", "sample text");
 
         assertThat(request.model()).isEqualTo("nomic-embed-text");
         assertThat(request.prompt()).isEqualTo("sample text");
@@ -19,7 +20,8 @@ class OllamaEmbeddingRequestTest {
         OllamaEmbeddingRequest r1 = new OllamaEmbeddingRequest("nomic-embed-text", "sample text");
         OllamaEmbeddingRequest r2 = new OllamaEmbeddingRequest("nomic-embed-text", "sample text");
         OllamaEmbeddingRequest r3 = new OllamaEmbeddingRequest("different-model", "sample text");
-        OllamaEmbeddingRequest r4 = new OllamaEmbeddingRequest("nomic-embed-text", "different text");
+        OllamaEmbeddingRequest r4 =
+                new OllamaEmbeddingRequest("nomic-embed-text", "different text");
 
         assertThat(r1).isEqualTo(r2);
         assertThat(r1).isNotEqualTo(r3);
@@ -39,11 +41,12 @@ class OllamaEmbeddingRequestTest {
 
     @Test
     void shouldImplementToStringCorrectly() {
-        OllamaEmbeddingRequest request = new OllamaEmbeddingRequest("nomic-embed-text", "sample text");
+        OllamaEmbeddingRequest request =
+                new OllamaEmbeddingRequest("nomic-embed-text", "sample text");
 
         assertThat(request.toString())
-            .contains("OllamaEmbeddingRequest")
-            .contains("nomic-embed-text")
-            .contains("sample text");
+                .contains("OllamaEmbeddingRequest")
+                .contains("nomic-embed-text")
+                .contains("sample text");
     }
 }

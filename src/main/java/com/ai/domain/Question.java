@@ -3,12 +3,9 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
-/**
- * Represents a user question to be answered by the system.
- */
+/** Represents a user question to be answered by the system. */
 public final class Question {
     private final String text;
     private final String correlationId;
@@ -41,8 +38,8 @@ public final class Question {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Question other)) return false;
-        return Objects.equals(text, other.text) &&
-               Objects.equals(correlationId, other.correlationId);
+        return Objects.equals(text, other.text)
+                && Objects.equals(correlationId, other.correlationId);
     }
 
     @Override

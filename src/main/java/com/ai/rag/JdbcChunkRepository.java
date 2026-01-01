@@ -3,17 +3,14 @@ package com.ai.rag;
 import com.ai.domain.Chunk;
 import com.ai.domain.Embedding;
 import com.pgvector.PGvector;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-/**
- * JDBC implementation of ChunkRepository using pgvector.
- */
+/** JDBC implementation of ChunkRepository using pgvector. */
 @Repository
 public class JdbcChunkRepository implements ChunkRepository {
 
@@ -25,30 +22,32 @@ public class JdbcChunkRepository implements ChunkRepository {
 
     @Override
     public Chunk save(Chunk chunk) {
-        String sql = "INSERT INTO chunks (id, document_id, text, position, embedding) " +
-                    "VALUES (?, ?, ?, ?, ?::vector) " +
-                    "ON CONFLICT (id) DO UPDATE SET " +
-                    "text = EXCLUDED.text, embedding = EXCLUDED.embedding";
+        String sql =
+                "INSERT INTO chunks (id, document_id, text, position, embedding) "
+                        + "VALUES (?, ?, ?, ?, ?::vector) "
+                        + "ON CONFLICT (id) DO UPDATE SET "
+                        + "text = EXCLUDED.text, embedding = EXCLUDED.embedding";
 
         PGvector pgVector = new PGvector(chunk.embedding().vector());
 
-        jdbcTemplate.update(sql,
-            chunk.id(),
-            chunk.documentId(),
-            chunk.text(),
-            chunk.position(),
-            pgVector.toString()
-        );
+        jdbcTemplate.update(
+                sql,
+                chunk.id(),
+                chunk.documentId(),
+                chunk.text(),
+                chunk.position(),
+                pgVector.toString());
 
         return chunk;
     }
 
     @Override
     public List<Chunk> findSimilar(float[] queryEmbedding, int topK) {
-        String sql = "SELECT id, document_id, text, position, embedding " +
-                    "FROM chunks " +
-                    "ORDER BY embedding <=> ?::vector " +
-                    "LIMIT ?";
+        String sql =
+                "SELECT id, document_id, text, position, embedding "
+                        + "FROM chunks "
+                        + "ORDER BY embedding <=> ?::vector "
+                        + "LIMIT ?";
 
         PGvector pgVector = new PGvector(queryEmbedding);
 
@@ -76,8 +75,11 @@ public class JdbcChunkRepository implements ChunkRepository {
                 // Parse the PGobject string representation as a PGvector
                 vector = new PGvector(pgObject.getValue()).toArray();
             } else {
-                throw new SQLException("Unexpected type for embedding column: " +
-                    (embeddingObj != null ? embeddingObj.getClass().getName() : "null"));
+                throw new SQLException(
+                        "Unexpected type for embedding column: "
+                                + (embeddingObj != null
+                                        ? embeddingObj.getClass().getName()
+                                        : "null"));
             }
             Embedding embedding = new Embedding(vector, "nomic-embed-text");
 

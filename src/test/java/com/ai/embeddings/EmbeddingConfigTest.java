@@ -1,8 +1,8 @@
 package com.ai.embeddings;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class EmbeddingConfigTest {
 
@@ -42,9 +42,9 @@ class EmbeddingConfigTest {
         EmbeddingConfig config = new EmbeddingConfig("http://localhost:11434", "nomic-embed-text");
 
         assertThat(config.toString())
-            .contains("EmbeddingConfig")
-            .contains("http://localhost:11434")
-            .contains("nomic-embed-text");
+                .contains("EmbeddingConfig")
+                .contains("http://localhost:11434")
+                .contains("nomic-embed-text");
     }
 
     @Test
@@ -58,28 +58,28 @@ class EmbeddingConfigTest {
     @Test
     void shouldRejectNullOllamaBaseUrl() {
         assertThatThrownBy(() -> new EmbeddingConfig(null, "nomic-embed-text"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Ollama base URL cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Ollama base URL cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankOllamaBaseUrl() {
         assertThatThrownBy(() -> new EmbeddingConfig("  ", "nomic-embed-text"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Ollama base URL cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Ollama base URL cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullModel() {
         assertThatThrownBy(() -> new EmbeddingConfig("http://localhost:11434", null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Model cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Model cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankModel() {
         assertThatThrownBy(() -> new EmbeddingConfig("http://localhost:11434", "  "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Model cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Model cannot be null or blank");
     }
 }

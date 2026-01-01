@@ -1,14 +1,15 @@
 package com.ai.llm.dto;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class OllamaGenerateRequestTest {
 
     @Test
     void shouldCreateValidRequest() {
-        OllamaGenerateRequest request = new OllamaGenerateRequest("llama3.1:8b", "Hello", 100, false);
+        OllamaGenerateRequest request =
+                new OllamaGenerateRequest("llama3.1:8b", "Hello", 100, false);
 
         assertThat(request.model()).isEqualTo("llama3.1:8b");
         assertThat(request.prompt()).isEqualTo("Hello");
@@ -18,7 +19,8 @@ class OllamaGenerateRequestTest {
 
     @Test
     void shouldCreateRequestWithStream() {
-        OllamaGenerateRequest request = new OllamaGenerateRequest("qwen2.5:7b", "Test prompt", 200, true);
+        OllamaGenerateRequest request =
+                new OllamaGenerateRequest("qwen2.5:7b", "Test prompt", 200, true);
 
         assertThat(request.stream()).isTrue();
     }

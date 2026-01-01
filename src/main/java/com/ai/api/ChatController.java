@@ -1,19 +1,17 @@
 package com.ai.api;
 
+import com.ai.control.ControlPlane;
 import com.ai.domain.AnswerResult;
 import com.ai.domain.Question;
 import com.ai.dto.ChatRequest;
 import com.ai.dto.ChatResponse;
 import com.ai.util.CorrelationIdHolder;
-import com.ai.control.ControlPlane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * REST controller for chat endpoint.
- */
+/** REST controller for chat endpoint. */
 @RestController
 @RequestMapping("/api")
 public class ChatController {
@@ -29,24 +27,28 @@ public class ChatController {
     public ResponseEntity<ChatResponse> chat(@RequestBody ChatRequest request) {
         String correlationId = CorrelationIdHolder.getOrGenerate();
 
-        logger.info("Received chat request - correlationId: {}, questionLength: {}",
-            correlationId, request.question().length());
+        logger.info(
+                "Received chat request - correlationId: {}, questionLength: {}",
+                correlationId,
+                request.question().length());
 
         try {
             Question question = new Question(request.question(), correlationId);
             AnswerResult result = controlPlane.answer(question);
 
-            ChatResponse response = new ChatResponse(
-                result.answer().text(),
-                result.answer().citations(),
-                result.confidence(),
-                result.answer().modelUsed(),
-                result.retrievalStrategy(),
-                result.verification().status().name()
-            );
+            ChatResponse response =
+                    new ChatResponse(
+                            result.answer().text(),
+                            result.answer().citations(),
+                            result.confidence(),
+                            result.answer().modelUsed(),
+                            result.retrievalStrategy(),
+                            result.verification().status().name());
 
-            logger.info("Chat request completed - correlationId: {}, confidence: {:.2f}",
-                correlationId, result.confidence());
+            logger.info(
+                    "Chat request completed - correlationId: {}, confidence: {:.2f}",
+                    correlationId,
+                    result.confidence());
 
             return ResponseEntity.ok(response);
 
@@ -63,6 +65,5 @@ public class ChatController {
         return ResponseEntity.ok(new HealthResponse("UP"));
     }
 
-    private record HealthResponse(String status) {
-    }
+    private record HealthResponse(String status) {}
 }

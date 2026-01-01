@@ -1,22 +1,14 @@
 package com.ai.model;
 
-/**
- * Strategies for retrieving context from the knowledge base.
- */
+/** Strategies for retrieving context from the knowledge base. */
 public enum RetrievalStrategy {
-    /**
-     * Simple top-K semantic search.
-     */
+    /** Simple top-K semantic search. */
     SIMPLE(5),
 
-    /**
-     * Increased retrieval depth for complex questions.
-     */
+    /** Increased retrieval depth for complex questions. */
     DEEP(10),
 
-    /**
-     * Maximum context retrieval for difficult questions.
-     */
+    /** Maximum context retrieval for difficult questions. */
     EXHAUSTIVE(20);
 
     private final int defaultTopK;

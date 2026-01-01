@@ -2,9 +2,7 @@ package com.ai.embeddings;
 
 import com.ai.domain.Embedding;
 
-/**
- * Service for generating text embeddings.
- */
+/** Service for generating text embeddings. */
 public interface EmbeddingService {
 
     /**

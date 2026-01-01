@@ -1,8 +1,8 @@
 package com.ai.embeddings.dto;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class OllamaEmbeddingResponseTest {
 
@@ -46,8 +46,6 @@ class OllamaEmbeddingResponseTest {
         Double[] embedding = {0.1, 0.2, 0.3};
         OllamaEmbeddingResponse response = new OllamaEmbeddingResponse(embedding);
 
-        assertThat(response.toString())
-            .contains("OllamaEmbeddingResponse")
-            .contains("embedding");
+        assertThat(response.toString()).contains("OllamaEmbeddingResponse").contains("embedding");
     }
 }

@@ -1,8 +1,6 @@
 package com.ai.llm;
 
-/**
- * Exception thrown when Ollama operations fail.
- */
+/** Exception thrown when Ollama operations fail. */
 public class OllamaException extends RuntimeException {
 
     public OllamaException(String message) {

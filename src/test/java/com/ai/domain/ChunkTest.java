@@ -1,13 +1,13 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class ChunkTest {
 
     private Embedding createTestEmbedding() {
-        return new Embedding(new float[]{0.1f, 0.2f, 0.3f}, "nomic-embed-text");
+        return new Embedding(new float[] {0.1f, 0.2f, 0.3f}, "nomic-embed-text");
     }
 
     @Test
@@ -26,69 +26,69 @@ class ChunkTest {
     void shouldRejectNullId() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk(null, "doc-1", "text", 0, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunk ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunk ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankId() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk("  ", "doc-1", "text", 0, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunk ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunk ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullDocumentId() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk("chunk-1", null, "text", 0, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankDocumentId() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk("chunk-1", "  ", "text", 0, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullText() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk("chunk-1", "doc-1", null, 0, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunk text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunk text cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankText() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk("chunk-1", "doc-1", "  ", 0, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunk text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunk text cannot be null or blank");
     }
 
     @Test
     void shouldRejectNegativePosition() {
         Embedding embedding = createTestEmbedding();
         assertThatThrownBy(() -> new Chunk("chunk-1", "doc-1", "text", -1, embedding))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Position cannot be negative");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Position cannot be negative");
     }
 
     @Test
     void shouldRejectNullEmbedding() {
         assertThatThrownBy(() -> new Chunk("chunk-1", "doc-1", "text", 0, null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Embedding cannot be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Embedding cannot be null");
     }
 
     @Test
     void shouldImplementEqualsCorrectly() {
         Embedding embedding = createTestEmbedding();
-        Embedding differentEmbedding = new Embedding(new float[]{0.4f}, "different");
+        Embedding differentEmbedding = new Embedding(new float[] {0.4f}, "different");
         Chunk c1 = new Chunk("chunk-1", "doc-1", "text", 0, embedding);
         Chunk c2 = new Chunk("chunk-1", "doc-1", "text", 0, embedding);
         Chunk c3 = new Chunk("chunk-2", "doc-1", "text", 0, embedding);
@@ -123,10 +123,10 @@ class ChunkTest {
         Chunk chunk = new Chunk("chunk-1", "doc-1", "sample text", 0, embedding);
 
         assertThat(chunk.toString())
-            .contains("Chunk")
-            .contains("chunk-1")
-            .contains("doc-1")
-            .contains("position=0")
-            .contains("textLength=11");
+                .contains("Chunk")
+                .contains("chunk-1")
+                .contains("doc-1")
+                .contains("position=0")
+                .contains("textLength=11");
     }
 }

@@ -1,8 +1,8 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class EmbeddingTest {
 
@@ -40,31 +40,31 @@ class EmbeddingTest {
     @Test
     void shouldRejectNullVector() {
         assertThatThrownBy(() -> new Embedding(null, "nomic-embed-text"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Vector cannot be null or empty");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Vector cannot be null or empty");
     }
 
     @Test
     void shouldRejectEmptyVector() {
-        assertThatThrownBy(() -> new Embedding(new float[]{}, "nomic-embed-text"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Vector cannot be null or empty");
+        assertThatThrownBy(() -> new Embedding(new float[] {}, "nomic-embed-text"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Vector cannot be null or empty");
     }
 
     @Test
     void shouldRejectNullModel() {
         float[] vector = {0.1f, 0.2f, 0.3f};
         assertThatThrownBy(() -> new Embedding(vector, null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Model cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Model cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankModel() {
         float[] vector = {0.1f, 0.2f, 0.3f};
         assertThatThrownBy(() -> new Embedding(vector, "  "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Model cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Model cannot be null or blank");
     }
 
     @Test
@@ -72,7 +72,7 @@ class EmbeddingTest {
         float[] vector = {0.1f, 0.2f, 0.3f};
         Embedding e1 = new Embedding(vector, "nomic-embed-text");
         Embedding e2 = new Embedding(vector, "nomic-embed-text");
-        Embedding e3 = new Embedding(new float[]{0.4f, 0.5f, 0.6f}, "nomic-embed-text");
+        Embedding e3 = new Embedding(new float[] {0.4f, 0.5f, 0.6f}, "nomic-embed-text");
         Embedding e4 = new Embedding(vector, "different-model");
 
         assertThat(e1).isEqualTo(e2);
@@ -98,8 +98,8 @@ class EmbeddingTest {
         Embedding embedding = new Embedding(vector, "nomic-embed-text");
 
         assertThat(embedding.toString())
-            .contains("Embedding")
-            .contains("nomic-embed-text")
-            .contains("dimension=3");
+                .contains("Embedding")
+                .contains("nomic-embed-text")
+                .contains("dimension=3");
     }
 }

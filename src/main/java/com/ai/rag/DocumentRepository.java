@@ -1,12 +1,9 @@
 package com.ai.rag;
 
 import com.ai.domain.Document;
-
 import java.util.Optional;
 
-/**
- * Repository for document storage and retrieval.
- */
+/** Repository for document storage and retrieval. */
 public interface DocumentRepository {
 
     /**
@@ -25,8 +22,6 @@ public interface DocumentRepository {
      */
     Optional<Document> findById(String id);
 
-    /**
-     * Deletes all documents (for testing).
-     */
+    /** Deletes all documents (for testing). */
     void deleteAll();
 }

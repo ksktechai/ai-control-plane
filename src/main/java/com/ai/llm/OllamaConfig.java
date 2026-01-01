@@ -3,16 +3,13 @@ package com.ai.llm;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configuration for Ollama client.
- */
+/** Configuration for Ollama client. */
 @Configuration
 @ConfigurationProperties(prefix = "ollama")
 public class OllamaConfig {
     private String baseUrl = "http://localhost:11434";
 
-    public OllamaConfig() {
-    }
+    public OllamaConfig() {}
 
     public OllamaConfig(String baseUrl) {
         setBaseUrl(baseUrl);

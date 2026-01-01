@@ -4,9 +4,7 @@ import com.ai.domain.Answer;
 import com.ai.domain.RetrievalResult;
 import com.ai.domain.VerificationResult;
 
-/**
- * Service for verifying answer grounding against retrieved context.
- */
+/** Service for verifying answer grounding against retrieved context. */
 public interface AnswerVerifier {
 
     /**

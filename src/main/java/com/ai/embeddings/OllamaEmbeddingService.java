@@ -9,9 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
-/**
- * Embedding service using Ollama's embedding models.
- */
+/** Embedding service using Ollama's embedding models. */
 @Service
 public class OllamaEmbeddingService implements EmbeddingService {
     private static final Logger logger = LogManager.getLogger(OllamaEmbeddingService.class);
@@ -23,9 +21,7 @@ public class OllamaEmbeddingService implements EmbeddingService {
 
     public OllamaEmbeddingService(EmbeddingConfig config) {
         this.model = config.model();
-        this.restClient = RestClient.builder()
-            .baseUrl(config.ollamaBaseUrl())
-            .build();
+        this.restClient = RestClient.builder().baseUrl(config.ollamaBaseUrl()).build();
         logger.info("Initialized EmbeddingService with model: {}", model);
     }
 
@@ -40,11 +36,13 @@ public class OllamaEmbeddingService implements EmbeddingService {
         logger.debug("Generating embedding for text of length: {}", text.length());
 
         try {
-            OllamaEmbeddingResponse response = restClient.post()
-                .uri("/api/embeddings")
-                .body(request)
-                .retrieve()
-                .body(OllamaEmbeddingResponse.class);
+            OllamaEmbeddingResponse response =
+                    restClient
+                            .post()
+                            .uri("/api/embeddings")
+                            .body(request)
+                            .retrieve()
+                            .body(OllamaEmbeddingResponse.class);
 
             if (response == null || response.embedding() == null) {
                 throw new EmbeddingException("Received null embedding from Ollama");

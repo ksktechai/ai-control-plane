@@ -3,17 +3,14 @@ package com.ai.embeddings;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Configuration for embedding service.
- */
+/** Configuration for embedding service. */
 @Configuration
 @ConfigurationProperties(prefix = "embedding")
 public class EmbeddingConfig {
     private String ollamaBaseUrl = "http://localhost:11434";
     private String model = "nomic-embed-text";
 
-    public EmbeddingConfig() {
-    }
+    public EmbeddingConfig() {}
 
     public EmbeddingConfig(String ollamaBaseUrl, String model) {
         setOllamaBaseUrl(ollamaBaseUrl);

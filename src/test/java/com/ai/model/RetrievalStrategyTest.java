@@ -1,9 +1,8 @@
 package com.ai.model;
 
-import com.ai.model.RetrievalStrategy;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class RetrievalStrategyTest {
 
@@ -26,7 +25,10 @@ class RetrievalStrategyTest {
     void shouldHaveAllEnumValues() {
         assertThat(RetrievalStrategy.values()).hasSize(3);
         assertThat(RetrievalStrategy.values())
-                .containsExactly(RetrievalStrategy.SIMPLE, RetrievalStrategy.DEEP, RetrievalStrategy.EXHAUSTIVE);
+                .containsExactly(
+                        RetrievalStrategy.SIMPLE,
+                        RetrievalStrategy.DEEP,
+                        RetrievalStrategy.EXHAUSTIVE);
     }
 
     @Test

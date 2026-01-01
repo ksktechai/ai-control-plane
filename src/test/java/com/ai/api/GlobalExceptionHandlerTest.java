@@ -1,14 +1,13 @@
 package com.ai.api;
 
+import static org.assertj.core.api.Assertions.*;
+
 import com.ai.util.CorrelationIdHolder;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static org.assertj.core.api.Assertions.*;
 
 class GlobalExceptionHandlerTest {
 

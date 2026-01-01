@@ -1,22 +1,19 @@
 package com.ai.control;
 
 import com.ai.domain.*;
+import com.ai.llm.OllamaClient;
 import com.ai.model.LlmModel;
 import com.ai.model.RetrievalStrategy;
-import com.ai.util.CorrelationIdHolder;
-import com.ai.llm.OllamaClient;
 import com.ai.rag.RetrievalService;
+import com.ai.util.CorrelationIdHolder;
 import com.ai.verifier.AnswerVerifier;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- * Implementation of the control plane with intelligent model selection and retry logic.
- */
+/** Implementation of the control plane with intelligent model selection and retry logic. */
 @Service
 public class ControlPlaneImpl implements ControlPlane {
     private static final Logger logger = LogManager.getLogger(ControlPlaneImpl.class);
@@ -27,9 +24,10 @@ public class ControlPlaneImpl implements ControlPlane {
     private final OllamaClient ollamaClient;
     private final AnswerVerifier answerVerifier;
 
-    public ControlPlaneImpl(RetrievalService retrievalService,
-                           OllamaClient ollamaClient,
-                           AnswerVerifier answerVerifier) {
+    public ControlPlaneImpl(
+            RetrievalService retrievalService,
+            OllamaClient ollamaClient,
+            AnswerVerifier answerVerifier) {
         this.retrievalService = retrievalService;
         this.ollamaClient = ollamaClient;
         this.answerVerifier = answerVerifier;
@@ -42,7 +40,8 @@ public class ControlPlaneImpl implements ControlPlane {
         }
 
         CorrelationIdHolder.set(question.correlationId());
-        logger.info("ControlPlane processing question - correlationId: {}", question.correlationId());
+        logger.info(
+                "ControlPlane processing question - correlationId: {}", question.correlationId());
 
         // Start with small model and simple retrieval
         LlmModel currentModel = LlmModel.PHI_3_MINI;
@@ -51,15 +50,17 @@ public class ControlPlaneImpl implements ControlPlane {
 
         while (attemptNumber < MAX_RETRIES) {
             attemptNumber++;
-            logger.info("Attempt {}/{} - model: {}, strategy: {}",
-                attemptNumber, MAX_RETRIES, currentModel, currentStrategy);
+            logger.info(
+                    "Attempt {}/{} - model: {}, strategy: {}",
+                    attemptNumber,
+                    MAX_RETRIES,
+                    currentModel,
+                    currentStrategy);
 
             try {
                 // Retrieve context
-                RetrievalResult retrievalResult = retrievalService.retrieve(
-                    question.text(),
-                    currentStrategy
-                );
+                RetrievalResult retrievalResult =
+                        retrievalService.retrieve(question.text(), currentStrategy);
 
                 // Generate answer
                 Answer answer = generateAnswer(question.text(), retrievalResult, currentModel);
@@ -69,29 +70,33 @@ public class ControlPlaneImpl implements ControlPlane {
 
                 double confidence = calculateConfidence(verification);
 
-                logger.info("Attempt {} completed - verification: {}, confidence: {:.2f}",
-                    attemptNumber, verification.status(), confidence);
+                logger.info(
+                        "Attempt {} completed - verification: {}, confidence: {:.2f}",
+                        attemptNumber,
+                        verification.status(),
+                        confidence);
 
                 // Check if answer meets quality threshold
-                if (confidence >= MIN_CONFIDENCE_THRESHOLD ||
-                    attemptNumber >= MAX_RETRIES) {
-                    return new AnswerResult(answer, verification, confidence,
-                        currentStrategy.name());
+                if (confidence >= MIN_CONFIDENCE_THRESHOLD || attemptNumber >= MAX_RETRIES) {
+                    return new AnswerResult(
+                            answer, verification, confidence, currentStrategy.name());
                 }
 
                 // Escalate for next attempt
                 currentModel = escalateModel(currentModel);
                 currentStrategy = escalateStrategy(currentStrategy);
 
-                logger.info("Confidence below threshold, escalating - newModel: {}, newStrategy: {}",
-                    currentModel, currentStrategy);
+                logger.info(
+                        "Confidence below threshold, escalating - newModel: {}, newStrategy: {}",
+                        currentModel,
+                        currentStrategy);
 
             } catch (Exception e) {
                 logger.error("Attempt {} failed: {}", attemptNumber, e.getMessage(), e);
 
                 if (attemptNumber >= MAX_RETRIES) {
-                    throw new ControlPlaneException("Failed to generate answer after "
-                        + MAX_RETRIES + " attempts", e);
+                    throw new ControlPlaneException(
+                            "Failed to generate answer after " + MAX_RETRIES + " attempts", e);
                 }
 
                 // Escalate and retry
@@ -103,34 +108,37 @@ public class ControlPlaneImpl implements ControlPlane {
         throw new ControlPlaneException("Failed to generate confident answer");
     }
 
-    private Answer generateAnswer(String questionText, RetrievalResult retrievalResult,
-                                  LlmModel model) {
-        String context = retrievalResult.chunks().stream()
-            .map(Chunk::text)
-            .collect(Collectors.joining("\n\n"));
+    private Answer generateAnswer(
+            String questionText, RetrievalResult retrievalResult, LlmModel model) {
+        String context =
+                retrievalResult.chunks().stream()
+                        .map(Chunk::text)
+                        .collect(Collectors.joining("\n\n"));
 
-        String prompt = String.format(
-            "Answer the question based only on the context provided. " +
-            "If the context doesn't contain enough information, say so.\n\n" +
-            "Context:\n%s\n\n" +
-            "Question: %s\n\n" +
-            "Answer:",
-            context,
-            questionText
-        );
+        String prompt =
+                String.format(
+                        "Answer the question based only on the context provided. "
+                                + "If the context doesn't contain enough information, say so.\n\n"
+                                + "Context:\n%s\n\n"
+                                + "Question: %s\n\n"
+                                + "Answer:",
+                        context, questionText);
 
         int maxTokens = calculateMaxTokens(model);
         String responseText = ollamaClient.generate(model, prompt, maxTokens);
 
-        List<Citation> citations = retrievalResult.chunks().stream()
-            .limit(3)
-            .map(chunk -> new Citation(
-                chunk.id(),
-                chunk.documentId(),
-                chunk.text(),
-                0.9  // Simplified - would calculate actual relevance
-            ))
-            .collect(Collectors.toList());
+        List<Citation> citations =
+                retrievalResult.chunks().stream()
+                        .limit(3)
+                        .map(
+                                chunk ->
+                                        new Citation(
+                                                chunk.id(),
+                                                chunk.documentId(),
+                                                chunk.text(),
+                                                0.9 // Simplified - would calculate actual relevance
+                                                ))
+                        .collect(Collectors.toList());
 
         return new Answer(responseText, citations, model.ollamaName());
     }

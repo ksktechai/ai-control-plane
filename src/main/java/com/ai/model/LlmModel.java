@@ -1,8 +1,6 @@
 package com.ai.model;
 
-/**
- * Available open-source LLM models.
- */
+/** Available open-source LLM models. */
 public enum LlmModel {
     LLAMA_3_2_3B("llama3.2:3b", 3_000_000_000L, 8192),
     LLAMA_3_1_8B("llama3.1:8b", 8_000_000_000L, 8192),

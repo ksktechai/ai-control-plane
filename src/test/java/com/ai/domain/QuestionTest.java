@@ -1,8 +1,8 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class QuestionTest {
 
@@ -17,29 +17,29 @@ class QuestionTest {
     @Test
     void shouldRejectNullText() {
         assertThatThrownBy(() -> new Question(null, "corr-123"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Question text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Question text cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankText() {
         assertThatThrownBy(() -> new Question("  ", "corr-123"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Question text cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Question text cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullCorrelationId() {
         assertThatThrownBy(() -> new Question("What is AI?", null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Correlation ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Correlation ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankCorrelationId() {
         assertThatThrownBy(() -> new Question("What is AI?", "  "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Correlation ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Correlation ID cannot be null or blank");
     }
 
     @Test
@@ -70,8 +70,8 @@ class QuestionTest {
         Question question = new Question("What is AI?", "corr-123");
 
         assertThat(question.toString())
-            .contains("Question")
-            .contains("What is AI?")
-            .contains("corr-123");
+                .contains("Question")
+                .contains("What is AI?")
+                .contains("corr-123");
     }
 }

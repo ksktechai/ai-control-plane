@@ -1,10 +1,9 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class AnswerResultTest {
 
@@ -14,11 +13,7 @@ class AnswerResultTest {
 
     private VerificationResult createTestVerification() {
         return new VerificationResult(
-            VerificationStatus.GROUNDED,
-            List.of(),
-            0.95,
-            "All claims verified"
-        );
+                VerificationStatus.GROUNDED, List.of(), 0.95, "All claims verified");
     }
 
     @Test
@@ -39,8 +34,8 @@ class AnswerResultTest {
         VerificationResult verification = createTestVerification();
 
         assertThatThrownBy(() -> new AnswerResult(null, verification, 0.9, "SIMPLE"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Answer cannot be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Answer cannot be null");
     }
 
     @Test
@@ -48,8 +43,8 @@ class AnswerResultTest {
         Answer answer = createTestAnswer();
 
         assertThatThrownBy(() -> new AnswerResult(answer, null, 0.9, "SIMPLE"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Verification cannot be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Verification cannot be null");
     }
 
     @Test
@@ -58,8 +53,8 @@ class AnswerResultTest {
         VerificationResult verification = createTestVerification();
 
         assertThatThrownBy(() -> new AnswerResult(answer, verification, -0.1, "SIMPLE"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Confidence must be between 0.0 and 1.0");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Confidence must be between 0.0 and 1.0");
     }
 
     @Test
@@ -68,8 +63,8 @@ class AnswerResultTest {
         VerificationResult verification = createTestVerification();
 
         assertThatThrownBy(() -> new AnswerResult(answer, verification, 1.1, "SIMPLE"))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Confidence must be between 0.0 and 1.0");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Confidence must be between 0.0 and 1.0");
     }
 
     @Test
@@ -78,8 +73,8 @@ class AnswerResultTest {
         VerificationResult verification = createTestVerification();
 
         assertThatThrownBy(() -> new AnswerResult(answer, verification, 0.9, null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Retrieval strategy cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Retrieval strategy cannot be null or blank");
     }
 
     @Test
@@ -88,8 +83,8 @@ class AnswerResultTest {
         VerificationResult verification = createTestVerification();
 
         assertThatThrownBy(() -> new AnswerResult(answer, verification, 0.9, "  "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Retrieval strategy cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Retrieval strategy cannot be null or blank");
     }
 
     @Test
@@ -97,9 +92,8 @@ class AnswerResultTest {
         Answer answer = createTestAnswer();
         Answer differentAnswer = new Answer("Different", List.of(), "model");
         VerificationResult verification = createTestVerification();
-        VerificationResult differentVerification = new VerificationResult(
-            VerificationStatus.UNGROUNDED, List.of(), 0.5, "Different"
-        );
+        VerificationResult differentVerification =
+                new VerificationResult(VerificationStatus.UNGROUNDED, List.of(), 0.5, "Different");
 
         AnswerResult r1 = new AnswerResult(answer, verification, 0.9, "SIMPLE");
         AnswerResult r2 = new AnswerResult(answer, verification, 0.9, "SIMPLE");
@@ -136,9 +130,9 @@ class AnswerResultTest {
         AnswerResult result = new AnswerResult(answer, verification, 0.9, "SIMPLE");
 
         assertThat(result.toString())
-            .contains("AnswerResult")
-            .contains("0.9")
-            .contains("SIMPLE")
-            .contains("GROUNDED");
+                .contains("AnswerResult")
+                .contains("0.9")
+                .contains("SIMPLE")
+                .contains("GROUNDED");
     }
 }

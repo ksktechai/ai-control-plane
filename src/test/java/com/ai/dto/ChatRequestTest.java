@@ -1,8 +1,8 @@
 package com.ai.dto;
 
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class ChatRequestTest {
 
@@ -16,15 +16,15 @@ class ChatRequestTest {
     @Test
     void shouldRejectNullQuestion() {
         assertThatThrownBy(() -> new ChatRequest(null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Question cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Question cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankQuestion() {
         assertThatThrownBy(() -> new ChatRequest("  "))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Question cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Question cannot be null or blank");
     }
 
     @Test
@@ -52,8 +52,6 @@ class ChatRequestTest {
     void shouldImplementToStringCorrectly() {
         ChatRequest request = new ChatRequest("What is AI?");
 
-        assertThat(request.toString())
-            .contains("ChatRequest")
-            .contains("What is AI?");
+        assertThat(request.toString()).contains("ChatRequest").contains("What is AI?");
     }
 }

@@ -3,12 +3,9 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Objects;
 
-/**
- * Represents a factual claim extracted from an answer.
- */
+/** Represents a factual claim extracted from an answer. */
 public final class Claim {
     private final String text;
     private final boolean isGrounded;
@@ -46,9 +43,9 @@ public final class Claim {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Claim other)) return false;
-        return Objects.equals(text, other.text) &&
-               isGrounded == other.isGrounded &&
-               Objects.equals(supportingChunkId, other.supportingChunkId);
+        return Objects.equals(text, other.text)
+                && isGrounded == other.isGrounded
+                && Objects.equals(supportingChunkId, other.supportingChunkId);
     }
 
     @Override
@@ -58,8 +55,12 @@ public final class Claim {
 
     @Override
     public String toString() {
-        return "Claim[text=" + text +
-               ", isGrounded=" + isGrounded +
-               ", supportingChunkId=" + supportingChunkId + "]";
+        return "Claim[text="
+                + text
+                + ", isGrounded="
+                + isGrounded
+                + ", supportingChunkId="
+                + supportingChunkId
+                + "]";
     }
 }

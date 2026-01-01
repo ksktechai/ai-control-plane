@@ -1,9 +1,13 @@
 package com.ai.api;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,22 +16,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.MDC;
 
-import java.io.IOException;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class RequestCorrelationFilterTest {
 
-    @Mock
-    private HttpServletRequest request;
+    @Mock private HttpServletRequest request;
 
-    @Mock
-    private HttpServletResponse response;
+    @Mock private HttpServletResponse response;
 
-    @Mock
-    private FilterChain filterChain;
+    @Mock private FilterChain filterChain;
 
     private RequestCorrelationFilter filter;
 
@@ -68,11 +64,14 @@ class RequestCorrelationFilterTest {
         String existingId = "existing-correlation-id-123";
         when(request.getHeader(RequestCorrelationFilter.HEADER)).thenReturn(existingId);
 
-        doAnswer(invocation -> {
-            // Verify MDC is set during filter chain execution
-            assertThat(MDC.get("correlationId")).isEqualTo(existingId);
-            return null;
-        }).when(filterChain).doFilter(request, response);
+        doAnswer(
+                        invocation -> {
+                            // Verify MDC is set during filter chain execution
+                            assertThat(MDC.get("correlationId")).isEqualTo(existingId);
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(request, response);
 
         filter.doFilter(request, response, filterChain);
 
@@ -85,15 +84,20 @@ class RequestCorrelationFilterTest {
     void shouldSetMdcDuringFilterChainExecution() throws ServletException, IOException {
         when(request.getHeader(RequestCorrelationFilter.HEADER)).thenReturn(null);
 
-        doAnswer(invocation -> {
-            // Verify MDC is set during filter chain execution
-            String correlationId = MDC.get("correlationId");
-            assertThat(correlationId).isNotNull();
-            assertThat(correlationId).isNotBlank();
-            // UUID format validation
-            assertThat(correlationId).matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
-            return null;
-        }).when(filterChain).doFilter(request, response);
+        doAnswer(
+                        invocation -> {
+                            // Verify MDC is set during filter chain execution
+                            String correlationId = MDC.get("correlationId");
+                            assertThat(correlationId).isNotNull();
+                            assertThat(correlationId).isNotBlank();
+                            // UUID format validation
+                            assertThat(correlationId)
+                                    .matches(
+                                            "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}");
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(request, response);
 
         filter.doFilter(request, response, filterChain);
 
@@ -112,7 +116,9 @@ class RequestCorrelationFilterTest {
     @Test
     void shouldClearMdcEvenWhenFilterChainThrowsException() throws ServletException, IOException {
         when(request.getHeader(RequestCorrelationFilter.HEADER)).thenReturn("test-id");
-        doThrow(new ServletException("Test exception")).when(filterChain).doFilter(request, response);
+        doThrow(new ServletException("Test exception"))
+                .when(filterChain)
+                .doFilter(request, response);
 
         assertThatThrownBy(() -> filter.doFilter(request, response, filterChain))
                 .isInstanceOf(ServletException.class)

@@ -4,13 +4,10 @@ import com.ai.domain.Citation;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Response DTO for chat endpoint.
- */
+/** Response DTO for chat endpoint. */
 public final class ChatResponse {
     private final String answer;
     private final List<Citation> citations;
@@ -87,24 +84,28 @@ public final class ChatResponse {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof ChatResponse other)) return false;
-        return Objects.equals(answer, other.answer) &&
-               Objects.equals(citations, other.citations) &&
-               Double.compare(confidence, other.confidence) == 0 &&
-               Objects.equals(modelUsed, other.modelUsed) &&
-               Objects.equals(retrievalStrategy, other.retrievalStrategy) &&
-               Objects.equals(verificationStatus, other.verificationStatus);
+        return Objects.equals(answer, other.answer)
+                && Objects.equals(citations, other.citations)
+                && Double.compare(confidence, other.confidence) == 0
+                && Objects.equals(modelUsed, other.modelUsed)
+                && Objects.equals(retrievalStrategy, other.retrievalStrategy)
+                && Objects.equals(verificationStatus, other.verificationStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(answer, citations, confidence, modelUsed,
-                          retrievalStrategy, verificationStatus);
+        return Objects.hash(
+                answer, citations, confidence, modelUsed, retrievalStrategy, verificationStatus);
     }
 
     @Override
     public String toString() {
-        return "ChatResponse[confidence=" + confidence +
-               ", modelUsed=" + modelUsed +
-               ", citationCount=" + citations.size() + "]";
+        return "ChatResponse[confidence="
+                + confidence
+                + ", modelUsed="
+                + modelUsed
+                + ", citationCount="
+                + citations.size()
+                + "]";
     }
 }

@@ -4,8 +4,8 @@ import com.ai.domain.AnswerResult;
 import com.ai.domain.Question;
 
 /**
- * Main control plane interface - the "brain" of the system.
- * Coordinates retrieval, generation, and verification with intelligent retry logic.
+ * Main control plane interface - the "brain" of the system. Coordinates retrieval, generation, and
+ * verification with intelligent retry logic.
  */
 public interface ControlPlane {
 

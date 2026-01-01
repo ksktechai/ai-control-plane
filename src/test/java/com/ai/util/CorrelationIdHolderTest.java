@@ -1,12 +1,11 @@
 package com.ai.util;
 
-import com.ai.util.CorrelationIdHolder;
+import static org.assertj.core.api.Assertions.*;
+
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.*;
 
 class CorrelationIdHolderTest {
 

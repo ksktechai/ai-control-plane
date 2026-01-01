@@ -1,10 +1,9 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.Instant;
-
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class DocumentTest {
 
@@ -28,71 +27,71 @@ class DocumentTest {
     void shouldRejectNullId() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document(null, "title", "content", "source", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankId() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("  ", "title", "content", "source", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document ID cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document ID cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullTitle() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("doc-1", null, "content", "source", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document title cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document title cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankTitle() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("doc-1", "  ", "content", "source", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document title cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document title cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullContent() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("doc-1", "title", null, "source", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document content cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document content cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankContent() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("doc-1", "title", "  ", "source", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document content cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document content cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullSource() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("doc-1", "title", "content", null, now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document source cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document source cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankSource() {
         Instant now = createTestTime();
         assertThatThrownBy(() -> new Document("doc-1", "title", "content", "  ", now))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Document source cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Document source cannot be null or blank");
     }
 
     @Test
     void shouldRejectNullCreatedAt() {
         assertThatThrownBy(() -> new Document("doc-1", "title", "content", "source", null))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Created timestamp cannot be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Created timestamp cannot be null");
     }
 
     @Test
@@ -133,9 +132,9 @@ class DocumentTest {
         Document doc = new Document("doc-1", "AI Basics", "Content", "source.pdf", now);
 
         assertThat(doc.toString())
-            .contains("Document")
-            .contains("doc-1")
-            .contains("AI Basics")
-            .contains("source.pdf");
+                .contains("Document")
+                .contains("doc-1")
+                .contains("AI Basics")
+                .contains("source.pdf");
     }
 }

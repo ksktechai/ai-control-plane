@@ -1,16 +1,15 @@
 package com.ai.domain;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 class RetrievalResultTest {
 
     private Chunk createTestChunk() {
-        Embedding embedding = new Embedding(new float[]{0.1f, 0.2f}, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f, 0.2f}, "nomic-embed-text");
         return new Chunk("chunk-1", "doc-1", "text", 0, embedding);
     }
 
@@ -34,29 +33,29 @@ class RetrievalResultTest {
     @Test
     void shouldRejectNullChunks() {
         assertThatThrownBy(() -> new RetrievalResult(null, "SIMPLE", 100L))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Chunks cannot be null");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Chunks cannot be null");
     }
 
     @Test
     void shouldRejectNullStrategy() {
         assertThatThrownBy(() -> new RetrievalResult(List.of(), null, 100L))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Strategy cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Strategy cannot be null or blank");
     }
 
     @Test
     void shouldRejectBlankStrategy() {
         assertThatThrownBy(() -> new RetrievalResult(List.of(), "  ", 100L))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Strategy cannot be null or blank");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Strategy cannot be null or blank");
     }
 
     @Test
     void shouldRejectNegativeDuration() {
         assertThatThrownBy(() -> new RetrievalResult(List.of(), "SIMPLE", -1L))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessageContaining("Duration cannot be negative");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Duration cannot be negative");
     }
 
     @Test
@@ -66,13 +65,13 @@ class RetrievalResultTest {
         RetrievalResult result = new RetrievalResult(chunks, "SIMPLE", 100L);
 
         assertThatThrownBy(() -> result.chunks().add(createTestChunk()))
-            .isInstanceOf(UnsupportedOperationException.class);
+                .isInstanceOf(UnsupportedOperationException.class);
     }
 
     @Test
     void shouldImplementEqualsCorrectly() {
         List<Chunk> chunks = List.of(createTestChunk());
-        Embedding differentEmbedding = new Embedding(new float[]{0.9f}, "different");
+        Embedding differentEmbedding = new Embedding(new float[] {0.9f}, "different");
         Chunk differentChunk = new Chunk("chunk-2", "doc-2", "different", 1, differentEmbedding);
         List<Chunk> differentChunks = List.of(differentChunk);
 
@@ -106,9 +105,9 @@ class RetrievalResultTest {
         RetrievalResult result = new RetrievalResult(chunks, "SIMPLE", 100L);
 
         assertThat(result.toString())
-            .contains("RetrievalResult")
-            .contains("chunkCount=1")
-            .contains("SIMPLE")
-            .contains("durationMs=100");
+                .contains("RetrievalResult")
+                .contains("chunkCount=1")
+                .contains("SIMPLE")
+                .contains("durationMs=100");
     }
 }

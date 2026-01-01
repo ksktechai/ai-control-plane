@@ -3,13 +3,10 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Represents the result of answer verification.
- */
+/** Represents the result of answer verification. */
 public final class VerificationResult {
     private final VerificationStatus status;
     private final List<Claim> claims;
@@ -64,10 +61,10 @@ public final class VerificationResult {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof VerificationResult other)) return false;
-        return status == other.status &&
-               Objects.equals(claims, other.claims) &&
-               Double.compare(groundingScore, other.groundingScore) == 0 &&
-               Objects.equals(reasoning, other.reasoning);
+        return status == other.status
+                && Objects.equals(claims, other.claims)
+                && Double.compare(groundingScore, other.groundingScore) == 0
+                && Objects.equals(reasoning, other.reasoning);
     }
 
     @Override
@@ -77,8 +74,12 @@ public final class VerificationResult {
 
     @Override
     public String toString() {
-        return "VerificationResult[status=" + status +
-               ", groundingScore=" + groundingScore +
-               ", claimCount=" + claims.size() + "]";
+        return "VerificationResult[status="
+                + status
+                + ", groundingScore="
+                + groundingScore
+                + ", claimCount="
+                + claims.size()
+                + "]";
     }
 }

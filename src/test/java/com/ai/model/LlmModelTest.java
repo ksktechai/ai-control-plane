@@ -1,9 +1,8 @@
 package com.ai.model;
 
-import com.ai.model.LlmModel;
-import org.junit.jupiter.api.Test;
-
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
 
 class LlmModelTest {
 
@@ -90,12 +89,9 @@ class LlmModelTest {
     void shouldHaveMutuallyExclusiveSizeCategories() {
         for (LlmModel model : LlmModel.values()) {
             int categories = 0;
-            if (model.isSmall())
-                categories++;
-            if (model.isMedium())
-                categories++;
-            if (model.isLarge())
-                categories++;
+            if (model.isSmall()) categories++;
+            if (model.isMedium()) categories++;
+            if (model.isLarge()) categories++;
 
             assertThat(categories)
                     .as("Model %s should be in exactly one size category", model.name())

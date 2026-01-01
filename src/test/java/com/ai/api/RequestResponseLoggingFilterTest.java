@@ -1,7 +1,13 @@
 package com.ai.api;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,18 +18,10 @@ import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(MockitoExtension.class)
 class RequestResponseLoggingFilterTest {
 
-    @Mock
-    private FilterChain filterChain;
+    @Mock private FilterChain filterChain;
 
     private RequestResponseLoggingFilter filter;
     private MockHttpServletRequest request;
@@ -52,12 +50,15 @@ class RequestResponseLoggingFilterTest {
         request.setContent("{\"question\":\"test\"}".getBytes(StandardCharsets.UTF_8));
         request.setContentType("application/json");
 
-        doAnswer(invocation -> {
-            // Simulate controller writing response
-            response.getWriter().write("{\"answer\":\"response\"}");
-            response.setStatus(200);
-            return null;
-        }).when(filterChain).doFilter(any(), any());
+        doAnswer(
+                        invocation -> {
+                            // Simulate controller writing response
+                            response.getWriter().write("{\"answer\":\"response\"}");
+                            response.setStatus(200);
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(any(), any());
 
         filter.doFilterInternal(request, response, filterChain);
 
@@ -117,10 +118,13 @@ class RequestResponseLoggingFilterTest {
         request.setMethod("GET");
         request.setRequestURI("/api/test");
 
-        doAnswer(invocation -> {
-            response.setStatus(204); // No content
-            return null;
-        }).when(filterChain).doFilter(any(), any());
+        doAnswer(
+                        invocation -> {
+                            response.setStatus(204); // No content
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(any(), any());
 
         filter.doFilterInternal(request, response, filterChain);
 
@@ -137,13 +141,16 @@ class RequestResponseLoggingFilterTest {
         request.setRequestURI("/api/test");
         request.setContent("test".getBytes(StandardCharsets.UTF_8));
 
-        doAnswer(invocation -> {
-            // Verify correlation ID is still present during filter chain
-            assertThat(MDC.get("correlationId")).isEqualTo(correlationId);
-            // Simulate another filter clearing MDC
-            MDC.clear();
-            return null;
-        }).when(filterChain).doFilter(any(), any());
+        doAnswer(
+                        invocation -> {
+                            // Verify correlation ID is still present during filter chain
+                            assertThat(MDC.get("correlationId")).isEqualTo(correlationId);
+                            // Simulate another filter clearing MDC
+                            MDC.clear();
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(any(), any());
 
         filter.doFilterInternal(request, response, filterChain);
 
@@ -160,11 +167,14 @@ class RequestResponseLoggingFilterTest {
         request.setMethod("GET");
         request.setRequestURI("/api/test");
 
-        doAnswer(invocation -> {
-            // Clear MDC during chain execution
-            MDC.clear();
-            return null;
-        }).when(filterChain).doFilter(any(), any());
+        doAnswer(
+                        invocation -> {
+                            // Clear MDC during chain execution
+                            MDC.clear();
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(any(), any());
 
         filter.doFilterInternal(request, response, filterChain);
 
@@ -189,13 +199,16 @@ class RequestResponseLoggingFilterTest {
         request.setRequestURI("/api/test");
         request.setContent("request".getBytes(StandardCharsets.UTF_8));
 
-        doAnswer(invocation -> {
-            // Simulate some processing time
-            Thread.sleep(10);
-            response.setStatus(201);
-            response.getWriter().write("created");
-            return null;
-        }).when(filterChain).doFilter(any(), any());
+        doAnswer(
+                        invocation -> {
+                            // Simulate some processing time
+                            Thread.sleep(10);
+                            response.setStatus(201);
+                            response.getWriter().write("created");
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(any(), any());
 
         filter.doFilterInternal(request, response, filterChain);
 
@@ -213,7 +226,8 @@ class RequestResponseLoggingFilterTest {
         request.setRequestURI("/api/test");
 
         doThrow(new ServletException("Filter chain error"))
-                .when(filterChain).doFilter(any(), any());
+                .when(filterChain)
+                .doFilter(any(), any());
 
         assertThatThrownBy(() -> filter.doFilterInternal(request, response, filterChain))
                 .isInstanceOf(ServletException.class)
@@ -228,7 +242,7 @@ class RequestResponseLoggingFilterTest {
     void shouldHandleMultipleParametersWithSameKey() throws ServletException, IOException {
         request.setMethod("GET");
         request.setRequestURI("/api/search");
-        request.addParameter("tag", new String[]{"java", "spring", "test"});
+        request.addParameter("tag", new String[] {"java", "spring", "test"});
 
         filter.doFilterInternal(request, response, filterChain);
 
@@ -267,11 +281,14 @@ class RequestResponseLoggingFilterTest {
         request.setContent("test".getBytes(StandardCharsets.UTF_8));
 
         String expectedResponse = "{\"result\":\"success\"}";
-        doAnswer(invocation -> {
-            response.getWriter().write(expectedResponse);
-            response.setStatus(200);
-            return null;
-        }).when(filterChain).doFilter(any(), any());
+        doAnswer(
+                        invocation -> {
+                            response.getWriter().write(expectedResponse);
+                            response.setStatus(200);
+                            return null;
+                        })
+                .when(filterChain)
+                .doFilter(any(), any());
 
         filter.doFilterInternal(request, response, filterChain);
 

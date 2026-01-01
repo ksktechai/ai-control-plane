@@ -3,21 +3,16 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * Represents a vector embedding.
- */
+/** Represents a vector embedding. */
 public final class Embedding {
     private final float[] vector;
     private final String model;
 
     @JsonCreator
-    public Embedding(
-            @JsonProperty("vector") float[] vector,
-            @JsonProperty("model") String model) {
+    public Embedding(@JsonProperty("vector") float[] vector, @JsonProperty("model") String model) {
         if (vector == null || vector.length == 0) {
             throw new IllegalArgumentException("Vector cannot be null or empty");
         }
@@ -47,8 +42,7 @@ public final class Embedding {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Embedding other)) return false;
-        return Arrays.equals(vector, other.vector) &&
-               Objects.equals(model, other.model);
+        return Arrays.equals(vector, other.vector) && Objects.equals(model, other.model);
     }
 
     @Override

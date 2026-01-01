@@ -3,13 +3,10 @@ package com.ai.domain;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.time.Instant;
 import java.util.Objects;
 
-/**
- * Represents a source document in the knowledge base.
- */
+/** Represents a source document in the knowledge base. */
 public final class Document {
     private final String id;
     private final String title;
@@ -75,11 +72,11 @@ public final class Document {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Document other)) return false;
-        return Objects.equals(id, other.id) &&
-               Objects.equals(title, other.title) &&
-               Objects.equals(content, other.content) &&
-               Objects.equals(source, other.source) &&
-               Objects.equals(createdAt, other.createdAt);
+        return Objects.equals(id, other.id)
+                && Objects.equals(title, other.title)
+                && Objects.equals(content, other.content)
+                && Objects.equals(source, other.source)
+                && Objects.equals(createdAt, other.createdAt);
     }
 
     @Override
@@ -89,8 +86,6 @@ public final class Document {
 
     @Override
     public String toString() {
-        return "Document[id=" + id +
-               ", title=" + title +
-               ", source=" + source + "]";
+        return "Document[id=" + id + ", title=" + title + ", source=" + source + "]";
     }
 }

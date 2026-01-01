@@ -1,34 +1,30 @@
 package com.ai.control;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
 import com.ai.domain.*;
+import com.ai.llm.OllamaClient;
 import com.ai.model.LlmModel;
 import com.ai.model.RetrievalStrategy;
-import com.ai.llm.OllamaClient;
 import com.ai.rag.RetrievalService;
 import com.ai.verifier.AnswerVerifier;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
-
 @ExtendWith(MockitoExtension.class)
 class ControlPlaneImplTest {
 
-    @Mock
-    private RetrievalService retrievalService;
+    @Mock private RetrievalService retrievalService;
 
-    @Mock
-    private OllamaClient ollamaClient;
+    @Mock private OllamaClient ollamaClient;
 
-    @Mock
-    private AnswerVerifier answerVerifier;
+    @Mock private AnswerVerifier answerVerifier;
 
     private ControlPlane controlPlane;
 
@@ -41,17 +37,15 @@ class ControlPlaneImplTest {
     void shouldAnswerQuestionSuccessfully() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("AI is artificial intelligence", List.of(), "phi3:mini");
 
-        VerificationResult verification = new VerificationResult(
-                VerificationStatus.GROUNDED,
-                List.of(),
-                0.95,
-                "Fully grounded");
+        VerificationResult verification =
+                new VerificationResult(
+                        VerificationStatus.GROUNDED, List.of(), 0.95, "Fully grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -79,7 +73,7 @@ class ControlPlaneImplTest {
     void shouldRetryWithEscalatedModelWhenConfidenceLow() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
@@ -87,18 +81,17 @@ class ControlPlaneImplTest {
         Answer answer2 = new Answer("Better answer", List.of(), "qwen2.5:7b");
 
         // First attempt returns low confidence
-        VerificationResult lowConfidenceVerification = new VerificationResult(
-                VerificationStatus.PARTIALLY_GROUNDED,
-                List.of(),
-                0.5,
-                "Partially grounded");
+        VerificationResult lowConfidenceVerification =
+                new VerificationResult(
+                        VerificationStatus.PARTIALLY_GROUNDED,
+                        List.of(),
+                        0.5,
+                        "Partially grounded");
 
         // Second attempt returns high confidence
-        VerificationResult highConfidenceVerification = new VerificationResult(
-                VerificationStatus.GROUNDED,
-                List.of(),
-                0.95,
-                "Fully grounded");
+        VerificationResult highConfidenceVerification =
+                new VerificationResult(
+                        VerificationStatus.GROUNDED, List.of(), 0.95, "Fully grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -119,18 +112,15 @@ class ControlPlaneImplTest {
     void shouldReturnLowConfidenceAnswerAfterMaxRetries() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("Vague answer", List.of(), "phi3:mini");
 
         // Always return low confidence
-        VerificationResult lowConfidenceVerification = new VerificationResult(
-                VerificationStatus.UNGROUNDED,
-                List.of(),
-                0.2,
-                "Ungrounded");
+        VerificationResult lowConfidenceVerification =
+                new VerificationResult(VerificationStatus.UNGROUNDED, List.of(), 0.2, "Ungrounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -161,17 +151,18 @@ class ControlPlaneImplTest {
     void shouldCalculateConfidenceForPartiallyGrounded() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("Partially correct answer", List.of(), "phi3:mini");
 
-        VerificationResult partialVerification = new VerificationResult(
-                VerificationStatus.PARTIALLY_GROUNDED,
-                List.of(),
-                0.9, // groundingScore
-                "Partially grounded");
+        VerificationResult partialVerification =
+                new VerificationResult(
+                        VerificationStatus.PARTIALLY_GROUNDED,
+                        List.of(),
+                        0.9, // groundingScore
+                        "Partially grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -190,17 +181,15 @@ class ControlPlaneImplTest {
     void shouldCalculateConfidenceForFailed() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
         Answer answer = new Answer("Failed answer", List.of(), "phi3:mini");
 
-        VerificationResult failedVerification = new VerificationResult(
-                VerificationStatus.FAILED,
-                List.of(),
-                0.0,
-                "Verification failed");
+        VerificationResult failedVerification =
+                new VerificationResult(
+                        VerificationStatus.FAILED, List.of(), 0.0, "Verification failed");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -221,11 +210,8 @@ class ControlPlaneImplTest {
 
         RetrievalResult retrievalResult = new RetrievalResult(List.of(), "SIMPLE", 100L);
 
-        VerificationResult verification = new VerificationResult(
-                VerificationStatus.GROUNDED,
-                List.of(),
-                0.95,
-                "Grounded");
+        VerificationResult verification =
+                new VerificationResult(VerificationStatus.GROUNDED, List.of(), 0.95, "Grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -244,20 +230,20 @@ class ControlPlaneImplTest {
     void shouldHandleMultipleChunksForCitations() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk1 = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
-        Chunk chunk2 = new Chunk("chunk-2", "doc-1", "Machine learning is a subset of AI", 1, embedding);
-        Chunk chunk3 = new Chunk("chunk-3", "doc-2", "Deep learning uses neural networks", 0, embedding);
-        Chunk chunk4 = new Chunk("chunk-4", "doc-2", "NLP is natural language processing", 1, embedding);
+        Chunk chunk2 =
+                new Chunk("chunk-2", "doc-1", "Machine learning is a subset of AI", 1, embedding);
+        Chunk chunk3 =
+                new Chunk("chunk-3", "doc-2", "Deep learning uses neural networks", 0, embedding);
+        Chunk chunk4 =
+                new Chunk("chunk-4", "doc-2", "NLP is natural language processing", 1, embedding);
 
-        RetrievalResult retrievalResult = new RetrievalResult(
-                List.of(chunk1, chunk2, chunk3, chunk4), "DEEP", 100L);
+        RetrievalResult retrievalResult =
+                new RetrievalResult(List.of(chunk1, chunk2, chunk3, chunk4), "DEEP", 100L);
 
-        VerificationResult verification = new VerificationResult(
-                VerificationStatus.GROUNDED,
-                List.of(),
-                0.95,
-                "Grounded");
+        VerificationResult verification =
+                new VerificationResult(VerificationStatus.GROUNDED, List.of(), 0.95, "Grounded");
 
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
                 .thenReturn(retrievalResult);
@@ -277,15 +263,12 @@ class ControlPlaneImplTest {
     void shouldRecoverFromFirstAttemptError() {
         Question question = new Question("What is AI?", "corr-123");
 
-        Embedding embedding = new Embedding(new float[] { 0.1f }, "nomic-embed-text");
+        Embedding embedding = new Embedding(new float[] {0.1f}, "nomic-embed-text");
         Chunk chunk = new Chunk("chunk-1", "doc-1", "AI is artificial intelligence", 0, embedding);
         RetrievalResult retrievalResult = new RetrievalResult(List.of(chunk), "SIMPLE", 100L);
 
-        VerificationResult verification = new VerificationResult(
-                VerificationStatus.GROUNDED,
-                List.of(),
-                0.95,
-                "Grounded");
+        VerificationResult verification =
+                new VerificationResult(VerificationStatus.GROUNDED, List.of(), 0.95, "Grounded");
 
         // First call fails, second succeeds
         when(retrievalService.retrieve(anyString(), any(RetrievalStrategy.class)))
